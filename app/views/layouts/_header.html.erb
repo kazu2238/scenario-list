@@ -1,0 +1,60 @@
+<div id="header">
+<div class="form-inline">
+  <a href="top" class="btn btn-info btn-sm">HOME</a>
+<form class="form-horizontal" name="search" action='search' method='get'>
+  <select name='scenario_list' class="form-control">
+    <option value='jericho941' <%
+      if @scenario_list == "jericho941"
+      %>selected<%
+    end
+    %>>jericho941</option>
+    <option value='nishitetu' <%
+      if @scenario_list == "nishitetu"
+      %>selected<%
+    end
+    %>>西鉄台本</option>
+    <option value='lavina' <%
+      if @scenario_list == "lavina"
+      %>selected<%
+    end
+    %>>ラヴィーナ</option>
+    <option value='news' <%
+      if @scenario_list == "news"
+      %>selected<%
+    end
+    %>>NEWS</option>
+  </select>
+  男<select name='men'>
+    <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
+          if @men == cnt
+          %>selected<%
+    end
+    %>><%=cnt.to_s%></option>
+  <%end
+    %></select> 
+  女<select name='women'>
+    <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
+          if @women == cnt
+          %>selected<%
+    end
+    %>><%=cnt.to_s%></option>
+  <%end
+    %></select>
+  不問<select name='num'>
+    <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
+          if @num == cnt
+          %>selected<%
+    end
+    %>><%=cnt.to_s%></option>
+  <%end
+    %></select>
+    <input type='submit' class="btn btn-sm btn-success" value="検索">
+  <input type="checkbox" name="check" value="true" <%
+    if @check == "true"
+    %>checked="checked"<%
+  end
+  %>>比率に融通を利かす
+    <input type='hidden' name='process' value='search'>
+  </form>
+  </div>
+</div>

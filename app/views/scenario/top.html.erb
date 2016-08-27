@@ -1,0 +1,43 @@
+<% provide(:title, "台本検索") %>
+<div id="main_contents" class="col-sm-10 col-sm-offset-1">
+  <h2>台本検索</h2>
+  <form name="form" method="POST" action="./search">
+    <%= link_to "全ての台本", search_path %><br>
+    <input type="hidden" name="process" value="all">
+  </form>
+  <br>
+  <form name= "search" action='./search' method='GET'>
+    <input type='radio' name='scenario_list' value='jericho941' checked="checked">jericho941<br>
+    <input type='radio' name='scenario_list' value='nishitetu'>西鉄台本<br>
+    <input type='radio' name='scenario_list' value='lavina'>ラヴィーナ<br>
+    <input type='radio' name='scenario_list' value='news'>NEWS<br>
+    <br>
+    男<select name='men'>
+      <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
+      <%end
+      %></select> 
+    女<select name='women'>
+      <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
+      <%end
+      %></select>
+    不問<select name='num'>
+      <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
+      <%end
+      %></select>
+    <input type="checkbox" name="check" value="true">比率に融通を利かす<br>
+    <br>
+    <input type="checkbox" name="random_check" value="true">
+    ランダム出力
+    <select name='output_num'>
+      <option value='5'>5件</option>
+      <option value='10'>10件</option>
+      <option value='20'>20件</option>
+    </select>
+    <br>
+    キーワード検索<br>
+    <input type="text" name="keyword"><br>
+    <input type='hidden' name='process' value='search'><br><br>
+    <input type='submit' class="btn btn-success" value="検索">
+  </form>
+  <br>
+</div>

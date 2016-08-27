@@ -1,0 +1,43 @@
+<%= stylesheet_link_tag "scenario/jericho941", :media => "all" %>
+<table class="sicenairo_list table-striped table-bordered">
+  <thead>
+    <tr class="list-label">
+      <td class='fake_top'>偽</td>
+      <td class='scenario_top'>台本</td>
+      <td class="writer_top">作者・作品</td>
+      <td class="retio_top">比率</td>
+      <td class="sum_top">計</td>
+    </tr>
+  </thead>
+  <tbody>
+  <%scenario_cnt = 0
+
+  if @random_check == "true"
+    @scenario_num = @scenario_num.sort_by{rand}
+  end
+  @scenario_num.each{|scenario_n|
+    if @keyword.blank? || /#{@keyword}/i =~ @list[scenario_n][0] || /#{@keyword}/i =~ @list[scenario_n][1]
+      @list[scenario_n][0].gsub!(/<p>|<\/p>/, '')
+      if /<p>.+<\/p>/ =~ @list[scenario_n][1] 
+        next
+      end
+      if @random_check.blank? || @random_check == "true" && @output_num.to_i > scenario_cnt
+        scenario_cnt = scenario_cnt + 1
+        %><tr class="list">
+          <%	@list[scenario_n][1] =~ /href=\"(.*)\"\s.*\"/
+          file_url = $1%>
+        <td class="fake"><%= link_to "Fake",fake_path(file_url: file_url), target:'_blank'%></td>
+          <td class="title"><%=raw @list[scenario_n][1]%></td>
+          <td class="writer"><%=@list[scenario_n][0]%></td>
+          <td class="retio"><%=raw @list[scenario_n][2]%></td>
+          <td class="sum"><%=@list[scenario_n][3]%></td>
+        </tr><%
+      else
+        break
+        end
+    end
+  }
+%>
+全<%=scenario_cnt%>件
+  </tbody>
+</table>

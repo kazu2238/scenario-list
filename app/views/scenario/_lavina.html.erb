@@ -1,0 +1,56 @@
+<%= stylesheet_link_tag "scenario/nishi_love", :media => "all" %>
+<table class="sicenairo_list table-striped table-bordered">
+  <% scenario_cnt = 0 %>
+  <thead>
+    <tr class="list-label">
+      <td class='number list-label'>No.</td>
+      <td class='o_a list-label'>O.A.日</td>
+      <td class='fake list-label'>偽</td>
+      <td class='title list-label'>タイトル</td>
+      <td class='writer list-label'>作者</td>
+      <td class='men list-label'>比率</td>
+      <td class='sum list-label'>計</td>
+      <td class='other1 list-label'>備考1</td>
+      <td class='other2 list-label'>備考2</td>
+      <td class='other3 list-label'>備考3</td>
+    </tr>
+  </thead>
+  <tbody>
+  <% if @random_check == "true" || @keyword != ""
+       @scenario_num = @scenario_num.sort_by{rand}
+  end
+  @scenario_num.each{|random_s|
+    if @keyword.blank? || /#{@keyword}/i =~ html_utf8(@list[random_s][2]) || /#{@keyword}/i =~ html_utf8(@list[random_s][3])
+      if @random_check.blank? || @random_check == "true" && @output_num.to_i > scenario_cnt
+        html_utf8(@list[random_s][2]) =~ /href=\"(.*)\"\s.*\"/
+        file_url = $1
+        if file_url == nil
+          next
+        else
+          scenario_cnt = scenario_cnt + 1
+          %><tr class="list">
+            <td class='number'><%=html_utf8(@list[random_s][0])%></td>
+            <td class='o_a'><%=raw html_utf8(@list[random_s][1])%></td>
+            <td class="fake"><%= link_to "Fake",fake_path(file_url: file_url), target:'_blank'%></td>
+            <td class='title'><%=raw html_utf8(@list[random_s][2]).gsub(/href=\"(.*)\"/, "href='" + file_url + "' target=\'_blank\'")%></td>
+            <td class='writer'><%=html_utf8(@list[random_s][3])%></td>
+            <td class='men'><font color="blue"><%=html_utf8(@list[random_s][4])%></font>:<font color="#DF01D7"><%=html_utf8(@list[random_s][5])%></font>:<%=html_utf8(@list[random_s][6])%><br>
+              (<%=html_utf8(@list[random_s][8]).to_i%>:<%=html_utf8(@list[random_s][9]).to_i%>:<%=html_utf8(@list[random_s][10]).to_i%>)
+            </td>
+            <td class='sum'><%=html_utf8(@list[random_s][7])%></td>
+            <td class='other1'><%=raw html_utf8(@list[random_s][11])%></td>
+            <td class='other2'><%=raw html_utf8(@list[random_s][12])%></td>
+            <%if @list[random_s][13] != nil
+            %><td class='other3'><%=raw html_utf8(@list[random_s][13])%></td>
+          <%end%>
+          </tr>
+        <%end
+      else
+        break
+      end
+    end
+  }
+
+  %>全<%=scenario_cnt%>件
+  </tbody>
+</table>

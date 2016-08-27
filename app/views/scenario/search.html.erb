@@ -1,0 +1,12 @@
+<html lang="ja">
+  <head>
+    <% provide(:title, "台本検索") %>
+  </head>
+  <body>
+  <% if @scenario_list.blank? || @scenario_list == "news"%>
+    <%= render "jericho941" %>
+  <% else %>
+    <%= render @scenario_list %>
+  <% end %>
+  </body>
+</html>
