@@ -47,7 +47,7 @@ class ScenarioController < ApplicationController
       if f == "." || f == ".."
         next
       end
-      if File.mtime("public/html/#{f}") < Time.now - 1800  
+      if File.mtime("public/html/#{f}") < Time.now - 36000 * 3 
         File.unlink("public/html/#{f}")
       end
     }
@@ -60,15 +60,22 @@ class ScenarioController < ApplicationController
 
   def fake
     url = params[:file_url]
-    fake_url = url.split("/").pop.split("\.").first
-    rand_name = html_edit(url)
-
-    if url
-      redirect_to "/fake_page/#{rand_name}-#{fake_url}"
+    p "--------------#{url}"
+    if url.blank?
+      flash[:warning] = "URLを入力してください"
+      redirect_to action:"faker"
     else
-      redirect_to "/404.html"
+      fake_url = url.split("/").pop.split("\.").first
+      rand_name = html_edit(url)
+
+      if url
+        redirect_to "/fake_page/#{rand_name}-#{fake_url}"
+      else
+        redirect_to "/404.html"
+      end
     end
   end
+
 
   #シナリオ検索
   def jericho_scenario_search(page_url)
