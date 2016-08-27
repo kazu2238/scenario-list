@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   get 'search'     => 'scenario#search'
   get 'faker'      => 'scenario#faker'
   get 'fake'       => 'scenario#fake'
-  get 'fake_html/:url'  => 'scenario#fake_html'
+  get 'fake_page/:url'  => 'scenario#fake_page'
 end

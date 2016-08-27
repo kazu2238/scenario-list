@@ -7,6 +7,9 @@ NISHITETU_URL = "http://jerichof.web.fc2.com/w/memo/"
 LAVINA_URL = "http://jerichof.web.fc2.com/scenari0/la_viena/"
 
 class ScenarioController < ApplicationController
+  # Basic認証フィルタを対象アクションに指定
+  http_basic_authenticate_with :name => 'admin', :password => 'nyanyanya', :only => :top
+  http_basic_authenticate_with :name => 'admin', :password => 'nyanyanya', :only => :search
   def top
   end
 
@@ -38,7 +41,7 @@ class ScenarioController < ApplicationController
   def faker
   end
 
-  def fake_html
+  def fake_page
     url = params[:url]
     Dir::foreach('public/html') {|f|
       if f == "." || f == ".."
@@ -61,7 +64,7 @@ class ScenarioController < ApplicationController
     rand_name = html_edit(url)
 
     if url
-      redirect_to "/fake_html/#{rand_name}-#{fake_url}"
+      redirect_to "/fake_page/#{rand_name}-#{fake_url}"
     else
       redirect_to "/404.html"
     end

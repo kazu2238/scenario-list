@@ -2,7 +2,6 @@
 <div id="main_contents" class="col-sm-10 col-sm-offset-1">
   <h2>台本検索</h2>
   <form name="form" method="POST" action="./search">
-    <%= link_to "全ての台本", search_path %><br>
     <input type="hidden" name="process" value="all">
   </form>
   <br>
@@ -40,4 +39,6 @@
     <input type='submit' class="btn btn-success" value="検索">
   </form>
   <br>
+  <br>
+  <%= link_to "URL Faker", faker_path %>
 </div>
