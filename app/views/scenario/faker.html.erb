@@ -1,0 +1,37 @@
+<div class="col-sm-10">
+<b>URL Faker</b><br>
+<br>
+<form action='fake' method='GET'>
+  Fake URL<br><input type='text' name='file_url' size="120"><br>
+  <input type='submit' value="偽装する">
+</form>
+<hr>
+<br>
+<% unless @fake_url.blank? %>
+  <b><a href='./url/<%=rand_name%>-<%=@fake_url%>' target="blank">Fake page</a><br>
+  URL：<input type="text" id="txt2" size="120"value="http://kazu.media-shelf.net/Faker/url/<%=rand_name%>-<%=@fake_url%>"><br>
+  <div id="swf2" class="btn">[copy]</div>
+</b><br>
+<br>
+元URL : <a href='<%=@cgi["url"]%>' target="blank"><%=@cgi["url"]%></a><br><hr>
+  <% end %>
+<script type="text/javascript" src="swfobject.js"></script>
+<script type="text/javascript" src="jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="copyclipb.js"></script>
+
+<script type="text/javascript">
+$(function(){
+
+    //コピーの対象をテキストボックスにする場合
+    createCopyButtonFromTextbox("swf2", $("#txt2"), "URLコピー", 80);
+    //		createCopyButtonFromTextbox("swf2", $("#txt2"), "コピー");
+    //		createCopyButtonFromTextbox("swf2", $("#txt2"));
+
+    });
+</script>
+
+<a href="javascript:(function(){ window.open('<%= root_url %>/fake?file_url='+(location.href).replace('l50', '')); })();">Bookmarklet</a>
+<br>
+<font size="2">↑のリンクを右クリックでブックマーク保存し、フェイクを作成したいページを開いた状態で登録したブックマークをクリックするとそのページのフェイクを作成できます。<br>
+  右クリックでブックマーク出来ない場合リンクをブックマークバーにドラックすることでブックマークすることができます。<br>
+  </div>

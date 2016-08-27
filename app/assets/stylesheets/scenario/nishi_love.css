@@ -31,6 +31,10 @@ td.title{
  width: 160px;
  }
 
+td.title_la{
+ width: 200px;
+ }
+
 td.writer{
 	width: 80px;
 }
@@ -73,4 +77,8 @@ td.fake{
 }
 td{
 padding:2px;
+}
+
+td.other_la{
+  width:130px;
 }
