@@ -11,7 +11,7 @@
 
 table{
   font-size: 14px;
-  margin-top: 30px;
+  margin-top: 50px;
 }
 
 form{
@@ -32,7 +32,6 @@ td.title{
  }
 
 td.title_la{
- width: 200px;
  }
 
 td.writer{
@@ -40,10 +39,20 @@ td.writer{
 }
 
 td.men{
-	width: 10px;
+	width: 9px;
 	font-weight: bold;
 	text-align: center;
 }
+
+td.o_a{
+  font-size:11px;
+}
+
+td.number{
+  font-size:11px;
+  width:50px;
+}
+
 td.sum{
 	width: 10px;
 	text-align: center;
@@ -79,6 +88,11 @@ td{
 padding:2px;
 }
 
+td.other1{
+  font-size:12px;
+}
+
 td.other_la{
   width:130px;
+  font-size:11px;
 }

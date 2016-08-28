@@ -16,7 +16,7 @@
     </tr>
   </thead>
   <tbody>
-  <% if @random_check == "true" || @keyword != ""
+  <% if @random_check == "true"
        @scenario_num = @scenario_num.sort_by{rand}
   end
   @scenario_num.each{|random_s|
@@ -51,6 +51,7 @@
     end
   }
 
-  %>全<%=scenario_cnt%>件
-  </tbody>
+  %></tbody>
 </table>
+全<%=scenario_cnt%>件
+

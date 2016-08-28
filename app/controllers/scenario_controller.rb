@@ -215,7 +215,6 @@ class ScenarioController < ApplicationController
         end
       end
     }
-
   end#nishitetu_scenario_search()
 
   #融通を聞かせた時のパターン

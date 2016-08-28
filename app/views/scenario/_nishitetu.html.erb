@@ -14,8 +14,7 @@
     </tr>
   </thead>
   <tbody>
-  <%
-      scenario_cnt = 0
+  <% scenario_cnt = 0
   if @random_check == "true"
     @scenario_num = @scenario_num.sort_by{rand}
   end
@@ -44,6 +43,7 @@
     end
   }
 
-  %>全<%=scenario_cnt%>件
+  %>
   </tbody>
 </table>
+全<%=scenario_cnt%>件
