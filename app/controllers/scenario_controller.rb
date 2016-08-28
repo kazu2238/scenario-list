@@ -60,7 +60,6 @@ class ScenarioController < ApplicationController
 
   def fake
     url = params[:file_url]
-    p "--------------#{url}"
     if url.blank?
       flash[:warning] = "URLを入力してください"
       redirect_to action:"faker"
