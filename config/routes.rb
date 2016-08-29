@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   get 'search'     => 'scenario#search'
   get 'faker'      => 'scenario#faker'
   get 'fake'       => 'scenario#fake'
-  get 'fake_page/:url'  => 'scenario#fake_page'
+  get 'fake_page/:url'  => 'scenario#fake_page' ,constraints: { url: /[^\/]+/ }
 end

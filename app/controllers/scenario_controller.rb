@@ -64,17 +64,16 @@ class ScenarioController < ApplicationController
       flash[:warning] = "URLを入力してください"
       redirect_to action:"faker"
     else
-      fake_url = url.split("/").pop.split("\.").first
+      fake_url = url.split("/").pop
       rand_name = html_edit(url)
 
-      if url
+      if rand_name 
         redirect_to "/fake_page/#{rand_name}-#{fake_url}"
       else
         redirect_to "/404.html"
       end
     end
   end
-
 
   #シナリオ検索
   def jericho_scenario_search(page_url)
@@ -332,12 +331,15 @@ class ScenarioController < ApplicationController
   def html_edit(url)
     name = rand(100) + 1
     if url != ""
-      begin
-      doc = Hpricot(open(url).read)
-      rescue => e
+      begin 
+        doc = Hpricot(open(url).read)
+      rescue
         return false
       end
-      File::open("public/html/#{name}-#{url.split("/").pop.split("\.").first}", 'w').puts doc
+      
+      File::open("public/html/#{name}-#{url.split("/").pop}", 'w') do |file|
+        file.puts(doc)
+      end
     end
     return name
   end #html_edit()
