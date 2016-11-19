@@ -18,10 +18,12 @@ class ScenarioController < ApplicationController
     @scenario_num = []
     @scenario_list = params[:scenario_list]
     @output_num = params[:output_num]
-    @num = params[:num].to_i
-    @men = params[:men].to_i
-    @women = params[:women].to_i
+    @num = params["num"].to_i
+    @men = params["men"].to_i
+    @women = params["women"].to_i
     @check = params[:check]
+    @unchecked = params[:unchecked]
+    puts "aaaa#{params[:unchecked]}"
     @random_check = params[:random_check]
     @keyword = params[:keyword]
     case @scenario_list
@@ -117,9 +119,11 @@ class ScenarioController < ApplicationController
           next
         end
         if /\((#{@men}|#{zenhan(@men)})-(#{@women}|#{zenhan(@women)})-(#{@num}|#{zenhan(@num_zen)}")/ =~ line.toutf8 
-          cnt = cnt + 1
-          @scenario_num << cnt
-          @list[cnt] =[writer, "<img src='/image/point017_02.gif'>#{line.toutf8.gsub(/\(\d.*\)/, " ")}" , scenario_retio(line.toutf8), member_sum(line.toutf8)]
+          if unchecked_check(line.toutf8)
+            cnt = cnt + 1
+            @scenario_num << cnt
+            @list[cnt] =[writer, "<img src='/image/point017_02.gif'>#{line.toutf8.gsub(/\(\d.*\)/, " ")}" , scenario_retio(line.toutf8), member_sum(line.toutf8)]
+          end
           next
         end
 
@@ -127,16 +131,20 @@ class ScenarioController < ApplicationController
           #合計人で検索
           if @men == 0 && @women == 0
             if /\((\d*|[０-９]*)-(\d*|[０-９]*)-(\d*|[０-９]*)-(#{@num}|#{zenhan(@num)})\)/ =~ line.toutf8 
-              @list[cnt] =[writer, "<img src='/image/point018_04.gif'>#{line.toutf8.gsub(/\(\d.*\)/, " ")}" , scenario_retio(line.toutf8), member_sum(line.toutf8)]
+              if unchecked_check(line.toutf8)
+                @list[cnt] =[writer, "<img src='/image/point018_04.gif'>#{line.toutf8.gsub(/\(\d.*\)/, " ")}" , scenario_retio(line.toutf8), member_sum(line.toutf8)]
+              end
             end
 
             #融通をきかせた比率
           else
             pattern.each{|p|
-              if /\(#{(p / 100)}-#{((p % 100) / 10)}-#{(p % 10)}/ =~ line.toutf8 
-                cnt = cnt + 1
-                @scenario_num << cnt
-                @list[cnt] =[writer, "<img src='/image/point018_04.gif'>#{line.toutf8.gsub(/\(\d.*\)/, " ")}" , scenario_retio(line.toutf8), member_sum(line.toutf8)]
+              if /\(#{(p["men" ])}-#{(p["women"])}-#{(p["num"])}/ =~ line.toutf8 
+                if unchecked_check(line.toutf8)
+                  cnt = cnt + 1
+                  @scenario_num << cnt
+                  @list[cnt] =[writer, "<img src='/image/point018_04.gif'>#{line.toutf8.gsub(/\(\d.*\)/, " ")}" , scenario_retio(line.toutf8), member_sum(line.toutf8)]
+                end
                 break
               end
             }
@@ -178,9 +186,11 @@ class ScenarioController < ApplicationController
       else
         if @men != 0 || @women != 0 || @num != 0
           if html_utf8(line[4]).to_i == @men && html_utf8(line[5]).to_i == @women && html_utf8(line[6]).to_i == @num
-            cnt = cnt + 1
-            @scenario_num << cnt
-            @list[cnt] = line
+            if unchecked_check(line)
+              cnt = cnt + 1
+              @scenario_num << cnt
+              @list[cnt] = line
+            end
             next
           end
 
@@ -188,19 +198,23 @@ class ScenarioController < ApplicationController
             #合計人数で検索
             if @men == 0 && @women == 0
               if @num == html_utf8(line[7]).to_i
-                cnt = cnt + 1
-                @scenario_num << cnt
-                @list[cnt] = line
+                if unchecked_check(line)
+                  cnt = cnt + 1
+                  @scenario_num << cnt
+                  @list[cnt] = line
+                end
               end
 
               #融通をきかせた比率
             else
               if @men + @women + @num == html_utf8(line[7]).to_i
                 pattern.each{|p|
-                  if html_utf8(line[4]).to_i == p/100 && html_utf8(line[5]).to_i == (p%100)/10 && html_utf8(line[6]).to_i == p%10
-                    cnt = cnt + 1
-                    @scenario_num << cnt
-                    @list[cnt] = line
+                  if html_utf8(line[4]).to_i == p["men"] && html_utf8(line[5]).to_i == p["women"] && html_utf8(line[6]).to_i == p["num"]
+                    if unchecked_check(line)
+                      cnt = cnt + 1
+                      @scenario_num << cnt
+                      @list[cnt] = line
+                    end
                     break
                   end
                 }
@@ -208,9 +222,11 @@ class ScenarioController < ApplicationController
             end
           end
         else
-          cnt = cnt + 1
-          @scenario_num << cnt
-          @list[cnt] = line
+          if unchecked_check(line)
+            cnt = cnt + 1
+            @scenario_num << cnt
+            @list[cnt] = line
+          end
         end
       end
     }
@@ -220,26 +236,56 @@ class ScenarioController < ApplicationController
   def member_pattern(men, women, num)
 
     pattern = []
-    pattern << men * 100  + women * 10  + num
+    pattern << {
+      "men" => men,
+      "women" => women,
+      "num" => num
+      } 
+
     (1..num).each{|i|
-      pattern << (men + i) * 100 + women * 10 + (num - i)
-      pattern << men * 100 + (women + i) * 10 + (num - i)
+      pattern << { 
+        "men" => men + i,
+        "women" => women,
+        "num" => num - i
+      } 
+
+      pattern << { 
+        "men" => men,
+        "women" => women + i,
+        "num" => num - i
+      } 
     }
+
     num2 = num
     m_men = men + num
     m_women = women
     w_men = men
     w_women = women + num
+
     while(num2 > 0)
       if m_men > men 
         m_men = m_men - 1
         m_women = m_women + 1
-        pattern << (m_men) * 100 + (m_women) * 10 + (num - num2)
+
+        if pattern_check(pattern, m_men, m_women, num - num2)
+          pattern << { 
+            "men" => m_men,
+            "women" => m_women,
+            "num" => num - num2
+          } 
+        end
       end
       if w_women > women
         w_men = w_men + 1
         w_women = w_women - 1
-        pattern << (w_men) * 100 + (w_women) * 10 + (num - num2)
+
+        if pattern_check(pattern, w_men, w_women, num - num2)
+          pattern << { 
+            "men" => w_men,
+            "women" => w_women,
+            "num" => num - num2
+          }
+        end
       end
       if w_women <= women && m_men <= men
         num2 = num2 - 1
@@ -251,18 +297,45 @@ class ScenarioController < ApplicationController
     end
 
     (1..men).each{|m|
-      pattern << (men - m) * 100 + women * 10 + (num + m)
+      if pattern_check(pattern, w_men, w_women, num - num2)
+        pattern << { 
+          "men" => men - m,
+          "women" => women,
+          "num" => num + m
+        } 
+      end
       (1..women).each{|w|
-        pattern << (men - m) * 100 + (women - w) * 10 + (num + w + m) 
+        if pattern_check(pattern, w_men, w_women, num - num2)
+          pattern << { 
+            "men" => men - m,
+            "women" => women - w,
+            "num" => num + m + w 
+          } 
+        end
       }
     }
     (1..women).each{|w|
-      pattern << men * 100 + (women - w) * 10 + (num + w) 
+      if pattern_check(pattern, w_men, w_women, num - num2)
+          pattern << { 
+            "men" => men,
+            "women" => women - w,
+            "num" => num + w
+          } 
+      end
     }
 
-    return(pattern.uniq)
+    return(pattern)
 
   end#member_pattern()
+
+  def pattern_check(pattern, men, women, num)
+    pattern.each{|p|
+      if p["men"] == men && p["women"] == women && p["num"] == num
+        return true
+      end
+    }
+    return false 
+  end
 
   def scenario_retio(title)
 
@@ -277,6 +350,20 @@ class ScenarioController < ApplicationController
     sum = $1.to_i + $2.to_i + $3.to_i
     return(sum)
 
+  end
+
+  def unchecked_check(title)
+    case @unchecked
+    when "checked"
+      if title =~ /^・/
+        return false
+      end
+    when "unchecked"
+      unless title =~ /^・/
+        return false
+      end
+    end
+      return true
   end
 
   def zenhan(str)

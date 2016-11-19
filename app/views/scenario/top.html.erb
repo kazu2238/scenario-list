@@ -11,6 +11,12 @@
     <input type='radio' name='scenario_list' value='lavina'>ラヴィーナ<br>
     <input type='radio' name='scenario_list' value='news'>NEWS<br>
     <br>
+    <select name='unchecked'>
+      <option value='all'>全て</option>
+      <option value='checked'>チェック済</option>
+      <option value='unchecked'>未チェック</option>
+    </select><br>
+
     男<select name='men'>
       <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
       <%end
@@ -32,6 +38,7 @@
       <option value='10'>10件</option>
       <option value='20'>20件</option>
     </select>
+    <br>
     <br>
     キーワード検索<br>
     <input type="text" name="keyword"><br>

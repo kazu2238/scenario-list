@@ -24,7 +24,12 @@
     end
     %>>NEWS</option>
   </select>
-  男<select name='men'>
+    <select name='unchecked' class="form-control">
+      <option value='all' <% if @unchecked == "all" %>selected<% end %>>全て</option>
+      <option value='checked' <% if @unchecked == "checked" %>selected<% end %>>チェック済</option>
+      <option value='unchecked' <% if @unchecked == "unchecked" %>selected<% end %>>未チェック</option>
+    </select>
+  <strong>男</strong><select name='men' class="form-control">
     <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
           if @men == cnt
           %>selected<%
@@ -32,7 +37,7 @@
     %>><%=cnt.to_s%></option>
   <%end
     %></select> 
-  女<select name='women'>
+  <strong>女</strong><select name='women' class="form-control">
     <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
           if @women == cnt
           %>selected<%
@@ -40,7 +45,7 @@
     %>><%=cnt.to_s%></option>
   <%end
     %></select>
-  不問<select name='num'>
+  <strong>不問</strong><select name='num' class="form-control">
     <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
           if @num == cnt
           %>selected<%
