@@ -402,9 +402,11 @@ class ScenarioController < ApplicationController
         writer = line.toutf8
         @list[cnt] = [writer, line.toutf8]
       elsif line.toutf8 =~ /\(\d.*\)/ 
-        cnt = cnt + 1
-        @scenario_num << cnt
-        @list[cnt] = [writer, line.toutf8.gsub(/\(\d.*\)/, "") , scenario_retio(line.toutf8), member_sum(line.toutf8)]
+        if unchecked_check(line.toutf8)
+          cnt = cnt + 1
+          @scenario_num << cnt
+          @list[cnt] = [writer, line.toutf8.gsub(/\(\d.*\)/, "") , scenario_retio(line.toutf8), member_sum(line.toutf8)]
+        end
       end
     }
 
