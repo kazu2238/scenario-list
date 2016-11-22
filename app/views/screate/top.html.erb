@@ -50,14 +50,15 @@ function getColor(cnt){
     <option value="#0000FF"></option>
     <option value="#006600"></option>
     <option value="#7E0021"></option>
-    <option value="#9933ff"></option>
+    <option value="#9933FF"></option>
+    <option value="#DAA520"></option>
     </datalist><br>
    <% } %>
   </div><br>
   <span id="input-plus" class="btn btn-sm btn-info" onclick="inputPlus()">入力欄を追加</span><br>
   <br>
   <h4>エクセル文入力</h4>
-  <%= text_area_tag(:text, "",:size => "80x15") %><br>
+  <textarea name="text" cols="110" rows="20" style="font-size:10px;"><%= @text %></textarea>
   <br>
   <%= submit_tag("変換", class:"btn btn-success") %><br>
   <br>

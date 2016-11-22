@@ -1,33 +1,35 @@
 class ScreateController < ApplicationController
 
   def top
-    text = params["text"]
-    unless text.blank?
-      @html_text = create(text)
+    @text = params["text"]
+    @names = params["name"]
+    @colors = params["color"]
+    unless @text.blank?
+      @html_text = create()
     end
   end
 
-  def create(text)
-    names = params["name"]
-    colors = params["color"]
+  def create()
+    @names = params["name"]
+    @colors = params["color"]
 
     #文字色のスタイルシート作成
     table_text = "\n<style>\n"
-    colors.each{|c|
-      if colors[c.first] =~ /#000000/
-        colors.delete(c.first)
+    @colors.each{|c|
+      if @colors[c.first] =~ /#000000/
+        @colors.delete(c.first)
       else
-        table_text += ".color-#{c.first}{\n\tcolor:#{c[1]};\n}\n"
+        table_text += ".color-#{color_class(c.first)}{\n\tcolor:#{c[1]};\n}\n"
       end
-      if names[c.first] == ""
-        names.delete(c.first)
+      if @names[c.first] == ""
+        @names.delete(c.first)
       end
     }
     table_text += "</style>\n"
 
     #配役入力欄作成
-    table_text += "\n<textarea cols='50' rows='#{names.length + 2}' name=h'aiyaku'>\n"
-    names.each{|n|
+    table_text += "\n<textarea cols='50' rows='#{@names.length + 2}' name=h'aiyaku'>\n"
+    @names.each{|n|
       table_text += "#{n[1]}：\n"
     }
     table_text += "\n</textarea><br>\n<br>\n"
@@ -38,7 +40,7 @@ class ScreateController < ApplicationController
     color_flag = false
 
     line_cnt = 1
-    text.lines{|t|
+    @text.lines{|t|
       t = t.gsub(/\R/, "")
       if br_flag
         table_text += "\t\t" + t.gsub(/\"/, "")
@@ -57,8 +59,8 @@ class ScreateController < ApplicationController
           table_text += "\t<tr>\n\t\t<td>#{sprintf("%03d",line_cnt)}</td>\n"
           line_cnt += 1
         end
-        names.each{|n|
-          if t =~ /^#{names[n.first]}/ || t =~ /\t#{names[n.first]}\t/ || t =~ /\t#{names[n.first]}M\t/ || t =~ /\t#{names[n.first]}N\t/
+        @names.each{|n|
+          if t =~ /^#{@names[n.first]}/ || t =~ /\t#{@names[n.first]}\t/ || t =~ /\t#{@names[n.first]}M\t/ || t =~ /\t#{@names[n.first]}N\t/
             color_flag = true
             table_text += tab_to_td(t, n.first)
             break
@@ -85,9 +87,9 @@ class ScreateController < ApplicationController
 
   def tab_to_td(line, color = nil)
     change_text = ""
-    if color
-      change_text = "\t\t<td class='color-#{color}'>"
-      change_text += line.gsub(/\t/, "</td>\n\t\t<td class='color-#{color}'>")
+    if color && @colors[color]
+      change_text = "\t\t<td class='color-#{color_class(color)}'>"
+      change_text += line.gsub(/\t/, "</td>\n\t\t<td class='color-#{color_class(color)}'>")
     else
       change_text = "\t\t<td>"
       change_text += line.gsub(/\t/, "</td>\n\t\t<td>")
@@ -95,6 +97,29 @@ class ScreateController < ApplicationController
     change_text = change_text.gsub(/\"/, "")
 
     return change_text
+  end
+
+
+  #デフォルトの色ではわかりやすいクラス名にする
+  def color_class(color)
+    case @colors[color]
+    when "#000000"
+      return "black"
+    when "#ff0000"
+      return "red"
+    when "#0000ff"
+      return "blue"
+    when "#006600"
+      return "green"
+    when "#7e0021"
+      return "brown"
+    when "#9933ff"
+      return "purple"
+    when "#daa520"
+      return "yellow"
+    else
+      return color
+    end
   end
 
 end
