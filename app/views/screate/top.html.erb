@@ -1,0 +1,77 @@
+<style>
+  table{
+    border-collapse: initial; 
+    border-spacing: 2px; 
+  }
+
+  input{
+    margin-bottom:5px;
+    margin-right:5px;
+    }
+</style>
+<script>
+  var cnt = 5;
+  
+  function inputPlus(){
+    $(".coloring").append('<label>名前:</label><input type="text" name="name[' + cnt +']" onKeyPress="return submitStop(event);"><label>色:</label><input type="color" name="color[' + cnt +']"><br>');
+    cnt = cnt + 1;
+  }
+
+function submitStop(e){
+  if (!e) var e = window.event;
+
+  if(e.keyCode == 13)
+    return false;
+}
+
+</script>
+
+<% provide(:title, "Screate") %>
+<div id="main_contents" class="col-sm-10 col-sm-offset-1">
+  <h2>エクセル テーブルHTML変換</h2>
+  <br>
+  <h3>エクセルテキスト</h3>
+  <%= form_tag("/screate", :method => "post")%>
+  <h4>名前と文章に色付け</h4>
+  <div class="coloring form-inline">
+  <% (0..4).each{|cnt| %>
+    <label>名前:</label><input class="form-control" type="text" name="name[<%= cnt %>]" onKeyPress="return submitStop(event);"><input type="color" list="exlist" name="color[<%= cnt %>]">
+    <datalist id="exlist">
+    <option value="#000000"></option>
+    <option value="#FF0000"></option>
+    <option value="#0000FF"></option>
+    <option value="#006600"></option>
+    <option value="#7E0021"></option>
+    <option value="#9933ff"></option>
+    </datalist><br>
+   <% } %>
+  </div><br>
+  <span id="input-plus" class="btn btn-sm btn-info" onclick="inputPlus()">入力欄を追加</span><br>
+  <br>
+  <h4>エクセル文入力</h4>
+  <%= text_area_tag(:text, "",:size => "80x15") %><br>
+  <br>
+  <%= submit_tag("変換", class:"btn btn-success") %><br>
+  <br>
+  <hr>
+  <br>
+  <h3>HTML</h3>
+  <textarea cols="110" rows="20" style="font-size:10px;"><%= @html_text %></textarea>
+<br>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">プレビュー</button>
+
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">プレビュー</h4>
+        </div>
+        <div class="modal-body"><%=raw @html_text %></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
