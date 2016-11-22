@@ -1,0 +1,98 @@
+#header{
+	position: fixed;
+	top:0px;
+  left: 0px;
+	width: 100%;
+	min-width: 700px;
+	padding: 5px 0 5px 10px;
+	background-color: #D0C0C0;
+	border-bottom: 2px #b0c4de dotted; /* 本文エリア下境界線 */
+}
+
+table{
+  font-size: 14px;
+  margin-top: 50px;
+}
+
+form{
+	display: inline;
+}
+span.home{
+	position: absolute;
+	right: 20px;
+}
+#main_contents{
+	margin-top: 50px;
+	margin-bottom: 50px;
+
+}
+
+td.title{
+ width: 160px;
+ }
+
+td.title_la{
+ }
+
+td.writer{
+	width: 80px;
+}
+
+td.men{
+	width: 9px;
+	font-weight: bold;
+	text-align: center;
+}
+
+td.o_a{
+  font-size:11px;
+}
+
+td.number{
+  font-size:11px;
+  width:50px;
+}
+
+td.sum{
+	width: 10px;
+	text-align: center;
+}
+
+td.cover_men{
+	width: 10px;
+	text-align: center;
+}
+td.cover_women{
+	width: 10px;
+	text-align: center;
+}
+td.cover_num{
+	width: 10px;
+	text-align: center;
+}
+
+tr.list-label{
+	background-color: #ffffe0;
+	font-weight: bold;
+}
+tr.back_blue{
+	background-color: #F0F8FF;
+}
+
+td.fake{
+	width: 40px;
+	font-weight: bold;
+	text-align: center;
+}
+td{
+padding:2px;
+}
+
+td.other1{
+  font-size:12px;
+}
+
+td.other_la{
+  width:130px;
+  font-size:11px;
+}

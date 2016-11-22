@@ -10,18 +10,23 @@
     }
 </style>
 <script>
-  var cnt = 5;
-  
-  function inputPlus(){
-    $(".coloring").append('<label>名前:</label><input type="text" name="name[' + cnt +']" onKeyPress="return submitStop(event);"><label>色:</label><input type="color" name="color[' + cnt +']"><br>');
-    cnt = cnt + 1;
-  }
+var cnt = 5;
+
+function inputPlus(){
+  $(".coloring").append('<label>名前:</label><input class="form-control" type="text" id="name-' + cnt + '" name="name[' + cnt +']" onKeyPress="return submitStop(event);"><input class="color-' + cnt + '" type="color" list="exlist" name="color[' + cnt +']" onChange="getColor(' + cnt +');" ><br>');
+  cnt = cnt + 1;
+}
 
 function submitStop(e){
   if (!e) var e = window.event;
 
   if(e.keyCode == 13)
     return false;
+}
+
+function getColor(cnt){
+  var colorCode = $('.color-' + cnt).val();
+  $('#name-'+cnt).css('color',colorCode);
 }
 
 </script>
@@ -35,7 +40,7 @@ function submitStop(e){
   <h4>名前と文章に色付け</h4>
   <div class="coloring form-inline">
   <% (0..4).each{|cnt| %>
-    <label>名前:</label><input class="form-control" type="text" name="name[<%= cnt %>]" onKeyPress="return submitStop(event);"><input type="color" list="exlist" name="color[<%= cnt %>]">
+    <label>名前:</label><input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" onKeyPress="return submitStop(event);"><input class="color-<%= cnt %>" type="color" list="exlist" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
     <datalist id="exlist">
     <option value="#000000"></option>
     <option value="#FF0000"></option>
