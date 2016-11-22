@@ -42,8 +42,23 @@ function getColor(cnt){
   <%= form_tag("/screate", :method => "post")%>
   <h4>名前と文章に色付け</h4>
   <div class="coloring form-inline">
-  <% (0..4).each{|cnt| %>
+  <% cnt = 0 %>
+  <% limit = 4 %>
+  <% if @names %>
+  <% @names.each{|n| %>
+    <% unless n[1] == "" %>
+    <label>名前:</label><input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" value="<%=n[1]%>" style="color:<%=@colors[n.first]%>" onKeyPress="return submitStop(event);">
+    <input class="color-<%= cnt %>" type="color" list="exlist" value="<%=@colors[n.first]%>" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
+    <br>
+    <% cnt += 1 %>
+   <% end %>
+   <% } %>
+   <% limit = 1 %>
+   <% end %>
+  <% (cnt..(cnt+limit)).each{|cnt| %>
     <label>名前:</label><input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" onKeyPress="return submitStop(event);"><input class="color-<%= cnt %>" type="color" list="exlist" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
+    <br>
+   <% } %>
     <datalist id="exlist">
     <option value="#000000"></option>
     <option value="#FF0000"></option>
@@ -52,8 +67,7 @@ function getColor(cnt){
     <option value="#7E0021"></option>
     <option value="#9933FF"></option>
     <option value="#DAA520"></option>
-    </datalist><br>
-   <% } %>
+    </datalist>
   </div><br>
   <span id="input-plus" class="btn btn-sm btn-info" onclick="inputPlus()">入力欄を追加</span><br>
   <br>
