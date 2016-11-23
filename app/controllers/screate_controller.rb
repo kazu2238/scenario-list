@@ -4,6 +4,7 @@ class ScreateController < ApplicationController
     @text = params["text"]
     @names = params["name"]
     @colors = params["color"]
+    @padding = params["padding"]
     unless @text.blank?
       @html_text = create()
     end
@@ -13,8 +14,13 @@ class ScreateController < ApplicationController
     @names = params["name"]
     @colors = params["color"]
 
-    #文字色のスタイルシート作成
+    #スタイル指定
     table_text = "\n<style>\n"
+
+    #テーブルレイアウト
+    table_text += "td{padding:#{@padding.to_i}px;}\n"
+
+    #文字色
     @colors.each{|c|
       if @colors[c.first] =~ /#000000/
         @colors.delete(c.first)
@@ -25,10 +31,12 @@ class ScreateController < ApplicationController
         @names.delete(c.first)
       end
     }
+
+
     table_text += "</style>\n"
 
     #配役入力欄作成
-    table_text += "\n<textarea cols='50' rows='#{@names.length + 2}' name=h'aiyaku'>\n"
+    table_text += "\n<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>\n"
     @names.each{|n|
       table_text += "#{n[1]}：\n"
     }
