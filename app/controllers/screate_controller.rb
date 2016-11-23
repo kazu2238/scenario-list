@@ -4,6 +4,7 @@ class ScreateController < ApplicationController
     @text = params["text"]
     @names = params["name"]
     @colors = params["color"]
+    @sex = params["sex"]
     @padding = params["padding"]
     unless @text.blank?
       @html_text = create()
@@ -36,11 +37,11 @@ class ScreateController < ApplicationController
     table_text += "</style>\n"
 
     #配役入力欄作成
-    table_text += "\n<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>\n"
+    table_text += "\n<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>"
     @names.each{|n|
-      table_text += "#{n[1]}：\n"
+      table_text += "#{n[1]}(#{@sex[n.first]})：\n"
     }
-    table_text += "\n</textarea><br>\n<br>\n"
+    table_text += "</textarea><br>\n<br>\n"
 
     #テーブル作成
     table_text += "\n<table border='1'>\n"

@@ -11,3 +11,4 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w(scenario/jericho941.css)
 Rails.application.config.assets.precompile += %w(scenario/nishi_love.css)
 Rails.application.config.assets.precompile += %w(scenario/main.css)
+Rails.application.config.assets.precompile += %w(screate/main.css)

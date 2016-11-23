@@ -1,87 +1,9 @@
-<style>
-table{
-  border-collapse: initial; 
-  border-spacing: 2px; 
-}
-input{
-  margin-bottom:5px;
-  margin-right:5px;
-}
-h4{
-  border-left: 3px solid #228B22;
-  padding-left:2px;
-}
-
-body{
-  background-color: #F5F5F5;
-}
-
-#main-contents{
-  width:700px;
-  margin-right: auto;
-  margin-left : auto;
-  border: 1px solid #D3D3D3;
-  background-color: #FFF;
-  border-radius: 5px;
-  padding:10px;
-  margin-top:10px;
-}
-#screate-top{
-  width:600px;
-  margin-right: auto;
-  margin-left : auto;
-  margin-bottom:30px;
-}
-#edit{
-  padding:10px;
-  background-color:#F5F5F5;
-  border: 1px dotted #D3D3D3;
-  padding-bottom:20px;
-  margin-bottom:20px;
-  width:600px;
-  border-radius: 5px;
-  margin-right: auto;
-  margin-left : auto;
-}
-#coloring{
-  float:left;
-  padding-right:60px;
-}
-#input-plus{
-  margin-left:33px;
-}
-#cell-padding{
-  float:left;
-}
-#input-text{
-  width:100%;
-  padding-top:20px;
-  clear:both;
-}
-
-#preview{
-  float:right;
-  margin-right:10px;
-  margin-bottom:5px;
-}
-#output-html{
-  width:600px;
-  padding:10px;
-  clear:both;
-  background: #FFF8DC;
-  border: 1px dotted #D3D3D3;
-  border-radius: 5px;
-  margin-bottom:40px;
-  margin-right: auto;
-  margin-left : auto;
-}
-
-</style>
+<%= stylesheet_link_tag "screate/main", :media => "all" %>
 <script>
 var cnt = 5;
 
 function inputPlus(){
-  $("#coloring").append('<label>名前:</label><input class="form-control" type="text" id="name-' + cnt + '" name="name[' + cnt +']" onKeyPress="return submitStop(event);"><input class="color-' + cnt + '" type="color" list="exlist" name="color[' + cnt +']" onChange="getColor(' + cnt +');" ><br>');
+  $("#coloring-plus").append('<label>名前:</label> <input class="form-control" type="text" id="name-' + cnt + '" name="name[' + cnt +']" onKeyPress="return submitStop(event);"> <input class="color-' + cnt + ' color-picker" type="color" list="exlist" name="color[' + cnt +']" onChange="getColor(' + cnt +');" > <select class="form-control" name="sex['+ cnt +']"><option value="men">男性</option><option value="women">女性</option><option value="humon">不問</option></select><br>');
   cnt = cnt + 1;
 }
 
@@ -118,8 +40,14 @@ function getColor(cnt){
       <% if @names %>
         <% @names.each{|n| %>
         <% unless n[1] == "" %>
-        <label>名前:</label><input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" value="<%=n[1]%>" style="color:<%=@colors[n.first]%>" onKeyPress="return submitStop(event);">
-      <input class="color-<%= cnt %>" type="color" list="exlist" value="<%=@colors[n.first]%>" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
+        <label>名前:</label>
+        <input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" value="<%=n[1]%>" style="color:<%=@colors[n.first]%>" onKeyPress="return submitStop(event);">
+        <input class="color-<%= cnt %> color-picker" type="color" list="exlist" value="<%=@colors[n.first]%>" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
+        <select class="form-control" name="sex[<%= cnt %>]">
+          <option value="&#9794;" <% if @sex[n.first] == "♂"%>selected<%end%>>男性</option>
+          <option value="&#9792;" <% if @sex[n.first] == "♀"%>selected<%end%>>女性</option>
+          <option value="不問" <% if @sex[n.first] == "不問"%>selected<%end%>>不問</option>
+        </select>
       <br>
       <% cnt += 1 %>
     <% end %>
@@ -127,9 +55,20 @@ function getColor(cnt){
       <% limit = 1 %>
     <% end %>
       <% (cnt..(cnt+limit)).each{|cnt| %>
-        <label>名前:</label><input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" onKeyPress="return submitStop(event);"><input class="color-<%= cnt %>" type="color" list="exlist" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
-      <br>
+        <label>名前:</label>
+        <input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" onKeyPress="return submitStop(event);">
+        <input class="color-<%= cnt %> color-picker" type="color" list="exlist" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
+        <select class="form-control" name="sex[<%= cnt %>]">
+          <option value="&#9794;">男性</option>
+          <option value="&#9792;">女性</option>
+          <option value="不問">不問</option>
+        </select>
+        <br>
     <% } %>
+      <div id="coloring-plus" class="form-inline">
+      </div>
+      <span id="input-plus" class="btn btn-sm btn-info" onclick="inputPlus()">入力欄を追加</span><br>
+    </div>
       <datalist id="exlist">
         <option value="#000000"></option>
         <option value="#FF0000"></option>
@@ -139,12 +78,10 @@ function getColor(cnt){
         <option value="#9933FF"></option>
         <option value="#DAA520"></option>
       </datalist>
-      <span id="input-plus" class="btn btn-sm btn-info" onclick="inputPlus()">入力欄を追加</span><br>
-    </div>
 
-    <div id="cell-padding">
+    <div id="cell-padding" class="form-inline">
       <h5>セル内の余白</h5>
-      <select name="padding">
+      <select name="padding" class="form-control">
         <% (0..10).each{|c|%><option value="<%=c%>" <%if c == @padding.to_i %>selected<% end%>><%=c%></option><% } %>
       </select>
 
