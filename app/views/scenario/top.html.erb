@@ -1,5 +1,39 @@
+<style>
+body{
+  background-color: #F5F5F5;
+}
+#main-contents{
+  margin-right: auto;
+  margin-left : auto;
+  width:700px;
+  border: 1px solid #D3D3D3;
+  background-color: #FFF;
+  border-radius: 5px;
+  padding:10px;
+  margin-top:10px;
+}
+.select-box-1{
+  width:150px;
+}
+.select-box-2{
+  width:95px;
+}
+.keyword{
+  width:250px;
+}
+.sex{
+  font-size:18px;
+  margin-right:5px;
+  margin-left:5px;
+}
+h4{
+  border-left: 3px solid #228B22;
+  padding-left:2px;
+}
+</style>
+
 <% provide(:title, "台本検索") %>
-<div id="main_contents" class="col-sm-10 col-sm-offset-1">
+<div id="main-contents">
   <h2>台本検索</h2>
   <form name="form" method="POST" action="./search" target="_blankk">
     <input type="hidden" name="process" value="all">
@@ -11,45 +45,54 @@
     <input type='radio' name='scenario_list' value='lavina'>ラヴィーナ<br>
     <input type='radio' name='scenario_list' value='news'>NEWS<br>
     <br>
-    <select name='unchecked'>
+    <select name='unchecked' class="form-control select-box-1">
       <option value='all'>全て</option>
       <option value='checked'>チェック済</option>
       <option value='unchecked'>未チェック</option>
     </select><br>
 
-    男<select name='men'>
-      <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
-      <%end
-      %></select> 
-    女<select name='women'>
-      <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
-      <%end
-      %></select>
-    不問<select name='num'>
-      <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
-      <%end
-      %></select>
-    <input type="checkbox" name="check" value="true">比率に融通を利かす<br>
+    <div class="form-inline">
+      <span class="sex">男</span><select name='men' class="form-control">
+        <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
+        <%end
+        %></select> 
+      <span class="sex">女</span><select name='women' class="form-control">
+        <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
+        <%end
+        %></select>
+      <span class="sex">不問</span><select name='num' class="form-control">
+        <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>'><%=cnt.to_s%></option>
+        <%end
+        %></select>
+      <input type="checkbox" name="check" value="true">融通を利かす<br>
+    </div>
     <br>
-    <input type="checkbox" name="random_check" value="true">
     ランダム出力
-    <select name='output_num'>
+    <select name='output_num' class="form-control select-box-2">
+      <option value=''>無効</option>
       <option value='5'>5件</option>
-      <option value='10'>10件</option>
-      <option value='20'>20件</option>
+      <% (1..10).each{|c| %>
+        <option value='<%=c*10%>'><%=c*10%>件</option>
+      <% } %>
     </select>
     <br>
     <br>
     キーワード検索<br>
-    <input type="text" name="keyword"><br>
+    <input type="text" name="keyword" class="form-control keyword"><br>
     <input type='hidden' name='process' value='search'><br><br>
     <input type='submit' class="btn btn-success" value="検索">
   </form>
   <br>
   <br>
-  <strong><%= link_to "URL Faker", faker_path %></strong>
+  <h4>その他のツール</h4>
+  <strong><%= link_to "URL Faker", faker_path %></strong><br>
+  ページを別のURLで表示（３時間後に消滅）。
   <br>
   <br>
-  <strong><%= link_to "台本作成ツール", "/screate" %></strong>
-
+  <strong><%= link_to "台本作成ツール", "/screate" %></strong><br>
+  エクセルの表をHTMLのテーブルに変換。
+  <br>
+  <br>
+  <br>
+  <br>
 </div>

@@ -12,49 +12,68 @@ h4{
   padding-left:2px;
 }
 
+body{
+  background-color: #F5F5F5;
+}
+
 #main-contents{
-width:700px;
-margin-right: auto;
-margin-left : auto;
+  width:700px;
+  margin-right: auto;
+  margin-left : auto;
+  border: 1px solid #D3D3D3;
+  background-color: #FFF;
+  border-radius: 5px;
+  padding:10px;
+  margin-top:10px;
+}
+#screate-top{
+  width:600px;
+  margin-right: auto;
+  margin-left : auto;
+  margin-bottom:30px;
 }
 #edit{
   padding:10px;
-  float:left;
   background-color:#F5F5F5;
   border: 1px dotted #D3D3D3;
   padding-bottom:20px;
   margin-bottom:20px;
   width:600px;
   border-radius: 5px;
+  margin-right: auto;
+  margin-left : auto;
 }
 #coloring{
   float:left;
   padding-right:60px;
+}
+#input-plus{
+  margin-left:33px;
 }
 #cell-padding{
   float:left;
 }
 #input-text{
   width:100%;
-  float:left;
-  margin-top:20px;
-}
-#output-html{
-  width:600px;
-  padding:10px;
-  float:left;
-  background: #FFF8DC;
-  border: 1px dotted #D3D3D3;
-  border-radius: 5px;
-}
-#input-plus{
-  margin-left:33px;
+  padding-top:20px;
+  clear:both;
 }
 
 #preview{
   float:right;
   margin-right:10px;
   margin-bottom:5px;
+}
+#output-html{
+  width:600px;
+  padding:10px;
+  clear:both;
+  background: #FFF8DC;
+  border: 1px dotted #D3D3D3;
+  border-radius: 5px;
+  margin-bottom:40px;
+  margin-right: auto;
+  margin-left : auto;
 }
 
 </style>
@@ -82,11 +101,12 @@ function getColor(cnt){
 
 <% provide(:title, "Screate") %>
 <div id="main-contents">
-  <h2>エクセル テーブルHTML変換</h2>
-  <br>
-  エクセルのテーブルをHTMLのテーブルに変換できます。<br>
-  テーブルには自動的に番号が振られます。<br>
-  <br>
+  <div id="screate-top">
+    <h2>エクセル テーブルHTML変換</h2>
+    <br>
+    エクセルのテーブルをHTMLのテーブルに変換。<br>
+    テーブルには自動的に番号挿入。<br>
+  </div>
   <%= form_tag("/screate", :method => "post")%>
 
   <div id="edit">

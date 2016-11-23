@@ -17,14 +17,12 @@ class ScenarioController < ApplicationController
     @list = Hash.new()
     @scenario_num = []
     @scenario_list = params[:scenario_list]
-    @output_num = params[:output_num]
     @num = params["num"].to_i
     @men = params["men"].to_i
     @women = params["women"].to_i
     @check = params[:check]
     @unchecked = params[:unchecked]
-    puts "aaaa#{params[:unchecked]}"
-    @random_check = params[:random_check]
+    @output_num = params[:output_num]
     @keyword = params[:keyword]
     case @scenario_list
     when "jericho941"

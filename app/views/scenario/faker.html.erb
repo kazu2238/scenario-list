@@ -1,24 +1,42 @@
+<style>
+body{
+  background-color: #F5F5F5;
+}
+#main-contents{
+  margin-right: auto;
+  margin-left : auto;
+  width:700px;
+  border: 1px solid #D3D3D3;
+  background-color: #FFF;
+  border-radius: 5px;
+  padding:10px;
+  margin-top:10px;
+}
+</style>
 <% provide(:title, "URL Faker") %>
-<div class="col-sm-10">
-<h2>URL Faker</h2><br>
-<br>
-<form action='fake' method='GET' target="_blank">
-  Fake URL<br><input type='text' class="form-control" name='file_url' size="120"><br>
-  <input type='submit' class="btn btn-success" value="偽装する">
-</form>
-<hr>
-<br>
-<% unless @fake_url.blank? %>
-  <b><a href='./url/<%=rand_name%>-<%=@fake_url%>' target="blank">Fake page</a><br>
-  URL：<input type="text" id="txt2" size="120"value="http://kazu.media-shelf.net/Faker/url/<%=rand_name%>-<%=@fake_url%>"><br>
-  <div id="swf2" class="btn">[copy]</div>
-</b><br>
-<br>
-元URL : <a href='<%=@cgi["url"]%>' target="blank"><%=@cgi["url"]%></a><br><hr>
-  <% end %>
+<div id="main-contents">
+  <h2>URL Faker</h2><br>
+  ページを偽装して別のURLで表示。<br>
+  作成から３時間でページは消滅。<br>
+  <br>
+  <br>
+  <form action='fake' method='GET' target="_blank">
+    Fake URL<br><input type='text' class="form-control" name='file_url' size="120"><br>
+    <input type='submit' class="btn btn-success" value="偽装する">
+  </form>
+  <hr>
+  <br>
+  <% unless @fake_url.blank? %>
+    <b><a href='./url/<%=rand_name%>-<%=@fake_url%>' target="blank">Fake page</a><br>
+    URL：<input type="text" id="txt2" size="120"value="http://kazu.media-shelf.net/Faker/url/<%=rand_name%>-<%=@fake_url%>"><br>
+    <div id="swf2" class="btn">[copy]</div>
+  </b><br>
+  <br>
+  元URL : <a href='<%=@cgi["url"]%>' target="blank"><%=@cgi["url"]%></a><br><hr>
+<% end %>
 
-<a href="javascript:(function(){ window.open('<%= root_url %>fake?file_url='+(location.href).replace('l50', '')); })();"><strong>Bookmarklet</strong></a>
-<br>
-<font size="2">↑のリンクを右クリックでブックマーク保存し、フェイクを作成したいページを開いた状態で登録したブックマークをクリックするとそのページのフェイクを作成できます。<br>
-  右クリックでブックマーク出来ない場合リンクをブックマークバーにドラックすることでブックマークすることができます。<br>
-  </div>
+  <a href="javascript:(function(){ window.open('<%= root_url %>fake?file_url='+(location.href).replace('l50', '')); })();"><strong>Bookmarklet</strong></a>
+  <br>
+  <font size="2">↑のリンクをブックマーク保存し、フェイクを作成したいページを開いた状態で、<br>登録したブックマークをクリックするとそのページのフェイクを作成可能。<br>
+  <br>
+</div>

@@ -8,10 +8,16 @@
 	background-color: #D0C0C0;
 	border-bottom: 2px #b0c4de dotted; /* 本文エリア下境界線 */
 }
+#main-contents{
+  margin-right: auto;
+  margin-left : auto;
+  padding:10px;
+  margin-top:50px;
+}
 
 table{
   font-size: 14px;
-  margin-top: 50px;
+  margin-top: 5px;
 }
 
 form{
