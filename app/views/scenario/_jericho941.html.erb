@@ -1,7 +1,60 @@
 <%= stylesheet_link_tag "scenario/jericho941", :media => "all" %>
+<script>
+function IsMatch(target, str) {
+  var r = new RegExp(str, 'i');
+  return target.match(r);
+};
+
+function IsHide(target, searchKey) {
+  for (var i = 0; i < target.length; i++) {
+    if (IsMatch(target[i], searchKey)) return false;
+  }
+  return true;
+};
+
+$(function () {
+    $('#search').focus();
+    var trList = $('tr', '#item_table tbody');
+
+    $('#search').keypress(function (e) {
+
+      if ( e.which == 13 ){
+      $("body").css("cursor", "wait");
+      // 全角スペースも検索ワードセパレータとする
+      var searchKey = this.value.replace(" ", " ");
+      if (searchKey.match(/ $/)) return true;
+
+      var keys = searchKey.split(" ");
+      $.each(trList, function () {
+        var ary = [];
+        // 2列目と3列目を検索対象にする
+        ary.push($('td:nth-child(2)', $(this)).text());
+        ary.push($('td:nth-child(3)', $(this)).text());
+        ary.push($('td:nth-child(4)', $(this)).text());
+
+        if (IsHide(ary, keys[0])) {
+        $(this).hide();
+        } else {
+        $(this).show();
+        if (keys.length > 1) {
+        for (var idx = 1; idx < keys.length; idx++) {
+        if (IsHide(ary, keys[idx])) {
+        $(this).hide();
+        }
+        }
+        }
+        }
+        });
+      $("body").css("cursor", "auto");
+      return false;
+      }
+    });
+});
+</script>
+
 <div id="main-contents">
   全<%=@scenario_num.length%>件
-  <table class="sicenairo_list table-striped table-bordered">
+  <table id="item_table" class="sicenairo_list table-striped table-bordered">
     <thead>
       <tr class="list-label">
         <td class='fake_top'>偽</td>
