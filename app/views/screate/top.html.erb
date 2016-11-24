@@ -35,10 +35,10 @@ function getColor(cnt){
     <h4>オプション</h4>
     <div id="coloring" class="form-inline">
       <h5>名前と文章に色付け</h5>
-      <% cnt = 0 %>
-      <% limit = 4 %>
-      <% if @names %>
-        <% @names.each{|n| %>
+    <% cnt = 0 %>
+    <% limit = 4 %>
+    <% if @names.present? %>
+      <% @names.each{|n| %>
         <% unless n[1] == "" %>
         <label>名前:</label>
         <input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" value="<%=n[1]%>" style="color:<%=@colors[n.first]%>" onKeyPress="return submitStop(event);">
@@ -49,9 +49,9 @@ function getColor(cnt){
           <option value="不問" <% if @sex[n.first] == "不問"%>selected<%end%>>不問</option>
         </select>
       <br>
-      <% cnt += 1 %>
-    <% end %>
-    <% } %>
+        <% cnt += 1 %>
+        <% end %>
+      <% } %>
       <% limit = 1 %>
     <% end %>
       <% (cnt..(cnt+limit)).each{|cnt| %>
@@ -82,8 +82,8 @@ function getColor(cnt){
     <div id="cell-padding" class="form-inline">
       <h5>セル内の余白</h5>
       <select name="padding" class="form-control">
-        <% (0..10).each{|c|%><option value="<%=c%>" <%if c == @padding.to_i %>selected<% end%>><%=c%></option><% } %>
-      </select>
+        <% (0..10).each{|c|%><option value="<%=c%>" <%if c == @padding.to_i || @padding.blank? && c == 3 %>selected<% end%>><%=c%></option><% } %>
+      </select> px
 
     </div>
     <div id="input-text">

@@ -6,20 +6,31 @@ class ScreateController < ApplicationController
     @colors = params["color"]
     @sex = params["sex"]
     @padding = params["padding"]
-    unless @text.blank?
+
+    if @names.present?
+      @names.each{|n|
+        if n[1]== ""
+          @names.delete(n.first)
+          @sex.delete(n.first)
+          @colors.delete(n.first)
+        end
+      }
+    end
+
+    if @text.present?
       @html_text = create()
     end
   end
 
   def create()
-    @names = params["name"]
-    @colors = params["color"]
 
     #スタイル指定
     table_text = "\n<style>\n"
 
     #テーブルレイアウト
-    table_text += "td{padding:#{@padding.to_i}px;}\n"
+    if @padding.to_i != 0
+      table_text += "td{padding:#{@padding.to_i}px;}\n"
+    end
 
     #文字色
     @colors.each{|c|
@@ -28,11 +39,7 @@ class ScreateController < ApplicationController
       else
         table_text += ".color-#{color_class(c.first)}{\n\tcolor:#{c[1]};\n}\n"
       end
-      if @names[c.first] == ""
-        @names.delete(c.first)
-      end
     }
-
 
     table_text += "</style>\n"
 
