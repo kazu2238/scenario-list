@@ -31,6 +31,29 @@ function getColor(cnt){
   </div>
   <%= form_tag("/screate", :method => "post")%>
 
+  <% if @text.present? %>
+  <div id="output-html">
+    <h4>変換済HTML<button type="button" class="btn btn-sm btn-primary" id="preview" data-toggle="modal" data-target="#myModal">プレビュー</button></h4>
+    <textarea cols="110" rows="20" style="font-size:10px;"><%= @html_text %></textarea>
+    
+  </div>
+
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">プレビュー</h4>
+        </div>
+        <div class="modal-body"><%=raw @html_text %></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
+
   <div id="edit">
     <h4>オプション</h4>
     <div id="coloring" class="form-inline">
@@ -44,9 +67,9 @@ function getColor(cnt){
         <input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" value="<%=n[1]%>" style="color:<%=@colors[n.first]%>" onKeyPress="return submitStop(event);">
         <input class="color-<%= cnt %> color-picker" type="color" list="exlist" value="<%=@colors[n.first]%>" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
         <select class="form-control" name="sex[<%= cnt %>]">
-          <option value="&#9794;" <% if @sex[n.first] == "♂"%>selected<%end%>>男性</option>
-          <option value="&#9792;" <% if @sex[n.first] == "♀"%>selected<%end%>>女性</option>
-          <option value="不問" <% if @sex[n.first] == "不問"%>selected<%end%>>不問</option>
+          <option value="men" <% if @sex[n.first] == "men"%>selected<%end%>>男性</option>
+          <option value="women" <% if @sex[n.first] == "women"%>selected<%end%>>女性</option>
+          <option value="humon" <% if @sex[n.first] == "不問"%>selected<%end%>>不問</option>
         </select>
       <br>
         <% cnt += 1 %>
@@ -59,9 +82,9 @@ function getColor(cnt){
         <input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" onKeyPress="return submitStop(event);">
         <input class="color-<%= cnt %> color-picker" type="color" list="exlist" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
         <select class="form-control" name="sex[<%= cnt %>]">
-          <option value="&#9794;">男性</option>
-          <option value="&#9792;">女性</option>
-          <option value="不問">不問</option>
+          <option value="men">男性</option>
+          <option value="women">女性</option>
+          <option value="humon">不問</option>
         </select>
         <br>
     <% } %>
@@ -94,24 +117,4 @@ function getColor(cnt){
     </div>
   </div>
 
-  <div id="output-html">
-    <h4>変換済HTML<button type="button" class="btn btn-sm btn-primary" id="preview" data-toggle="modal" data-target="#myModal">プレビュー</button></h4>
-    <textarea cols="110" rows="20" style="font-size:10px;"><%= @html_text %></textarea>
-    
-  </div>
-
-  <div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">プレビュー</h4>
-        </div>
-        <div class="modal-body"><%=raw @html_text %></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">閉じる</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

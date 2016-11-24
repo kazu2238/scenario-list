@@ -6,6 +6,7 @@ class ScreateController < ApplicationController
     @colors = params["color"]
     @sex = params["sex"]
     @padding = params["padding"]
+    @name_cnt = {}
 
     if @names.present?
       @names.each{|n|
@@ -13,6 +14,8 @@ class ScreateController < ApplicationController
           @names.delete(n.first)
           @sex.delete(n.first)
           @colors.delete(n.first)
+        else
+          @name_cnt.store(n.first , 0)
         end
       }
     end
@@ -23,6 +26,21 @@ class ScreateController < ApplicationController
   end
 
   def create()
+    men = 0
+    women = 0
+    humon = 0
+
+    #比率
+    @sex.each{|s|
+      case s[1]
+      when "men"
+        men += 1
+      when "women"
+        women += 1
+      when "humon"
+        humon += 1
+      end
+    }
 
     #スタイル指定
     table_text = "\n<style>\n"
@@ -43,10 +61,14 @@ class ScreateController < ApplicationController
 
     table_text += "</style>\n"
 
+    table_text += "<strong>&#9794;#{men} &#9792;#{women} 不問#{humon} 計#{men+women+humon}</strong><br>\n<br>\n登場人物<small>&lt;総セリフ数：(serif-sum)&gt;</small><br>\n<br>\n"
+    @names.each{|n|
+      table_text += "<strong class='color-#{color_class(n.first)}'>#{n[1]}</strong>（#{sex_icon(@sex[n.first])}）<small>&lt;セリフ数：(serif-#{n.first})&gt;</small><br>\n<br>\n"
+    }
     #配役入力欄作成
     table_text += "\n<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>"
     @names.each{|n|
-      table_text += "#{n[1]}(#{@sex[n.first]})：\n"
+      table_text += "#{n[1]}(#{sex_icon(@sex[n.first])})：\n"
     }
     table_text += "</textarea><br>\n<br>\n"
 
@@ -76,9 +98,10 @@ class ScreateController < ApplicationController
           line_cnt += 1
         end
         @names.each{|n|
-          if t =~ /^#{@names[n.first]}/ || t =~ /\t#{@names[n.first]}\t/ || t =~ /\t#{@names[n.first]}M\t/ || t =~ /\t#{@names[n.first]}N\t/
+          if t =~ /^#{n[1]}/ || t =~ /\t#{n[1]}\t/ || t =~ /\t#{n[1]}M\t/ || t =~ /\t#{n[1]}N\t/
             color_flag = true
             table_text += tab_to_td(t, n.first)
+            @name_cnt[n.first] += 1
             break
           end
         }
@@ -94,9 +117,13 @@ class ScreateController < ApplicationController
           table_text += "</td>\n\t</tr>\n"
         end
       end
-
     }
     table_text += "</table>"
+
+    table_text = table_text.gsub(/\(serif-sum\)/, (line_cnt - 1).to_s)
+    @names.each{|n|
+      table_text = table_text.gsub(/\(serif-#{n.first}\)/, @name_cnt[n.first].to_s)
+    }
 
     return table_text
   end
@@ -113,6 +140,18 @@ class ScreateController < ApplicationController
     change_text = change_text.gsub(/\"/, "")
 
     return change_text
+  end
+
+  #性別の記号を取得
+  def sex_icon(sex)
+    case sex
+    when "men"
+      return "&#9794;"
+    when "women"
+      return "&#9792;"
+    when "humon"
+      return "不問"
+    end
   end
 
 
