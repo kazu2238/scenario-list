@@ -52,6 +52,11 @@ body{
 }
 #cell-padding{
   float:left;
+  width:150px;
+  margin-bottom:10px;
+}
+#style-change{
+  float:left;
 }
 #input-text{
   width:100%;

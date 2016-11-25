@@ -6,6 +6,7 @@ class ScreateController < ApplicationController
     @colors = params["color"]
     @sex = params["sex"]
     @padding = params["padding"]
+    @style_change = params["style_change"]
     @name_cnt = {}
 
     if @names.present?
@@ -46,6 +47,12 @@ class ScreateController < ApplicationController
     table_text = "\n<style>\n"
 
     #テーブルレイアウト
+    if @style_change.present?
+      table_text += "table{ border: 0px; border-right: 1px dotted #DCDCDC; border-collapse: collapse;\n\tborder-spacing: 0px;\n}"
+      table_text += "table td{ padding:5px; border-right: 0px; border-left: 0px; border-bottom: 1px solid #A9A9A9;}\n"
+      table_text += "td:nth-of-type(1){ background-color: #DCDCDC;border-right: 1px solid #A9A9A9;}"
+      table_text += "td:nth-of-type(2){ background-color: #F5F5F5;border-right: 1px solid #A9A9A9;}\n"
+    end
     if @padding.to_i != 0
       table_text += "td{padding:#{@padding.to_i}px;}\n"
     end
@@ -78,11 +85,11 @@ class ScreateController < ApplicationController
     color_flag = false
 
     line_cnt = 1
-    @text.lines{|t|
-      t = t.gsub(/\R/, "")
+    @text.lines{|line|
+      line = line.gsub(/\R/, "")
       if br_flag
-        table_text += "\t\t" + t.gsub(/\"/, "")
-        if t =~ /\"/ 
+        table_text += "\t\t" + line.gsub(/\"/, "")
+        if line =~ /\"/ 
           br_flag = false
           table_text += "</td>\n\t</tr>\n"
         else
@@ -91,25 +98,25 @@ class ScreateController < ApplicationController
         end
       else
         
-        if t =~ /^\t/ 
+        if line =~ /^\t/ 
           table_text += "\t<tr>\n\t\t<td></td>\n"
         else
           table_text += "\t<tr>\n\t\t<td>#{sprintf("%03d",line_cnt)}</td>\n"
           line_cnt += 1
         end
         @names.each{|n|
-          if t =~ /^#{n[1]}/ || t =~ /\t#{n[1]}\t/ || t =~ /\t#{n[1]}M\t/ || t =~ /\t#{n[1]}N\t/
+          if line =~ /^#{n[1]}/ || line =~ /\t#{n[1]}\t/ || line =~ /\t#{n[1]}M\t/ || line =~ /\t#{n[1]}N\t/
             color_flag = true
-            table_text += tab_to_td(t, n.first)
+            table_text += tab_to_td(line, n.first)
             @name_cnt[n.first] += 1
             break
           end
         }
         unless color_flag
-          table_text += tab_to_td(t)
+          table_text += tab_to_td(line, nil)
         end
         color_flag = false
-        if t =~ /\"/ 
+        if line =~ /\"/ 
           #セル内がある時
           table_text += "<br>\n"
           br_flag = true
@@ -128,14 +135,19 @@ class ScreateController < ApplicationController
     return table_text
   end
 
-  def tab_to_td(line, color = nil)
+  def tab_to_td(line, color = nil )
     change_text = ""
     if color && @colors[color]
       change_text = "\t\t<td class='color-#{color_class(color)}'>"
       change_text += line.gsub(/\t/, "</td>\n\t\t<td class='color-#{color_class(color)}'>")
     else
       change_text = "\t\t<td>"
+      puts line
+      if line =~ /^\t/
+      change_text += line.gsub(/\t/, "</td>\n\t\t<td style='font-size:14px;font-style:oblique'>")
+      else
       change_text += line.gsub(/\t/, "</td>\n\t\t<td>")
+      end
     end
     change_text = change_text.gsub(/\"/, "")
 

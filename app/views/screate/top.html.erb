@@ -1,5 +1,26 @@
 <%= stylesheet_link_tag "screate/main", :media => "all" %>
+<style>
+table.sample{
+  border: 0px;
+  border-collapse: collapse;
+  border-spacing: 0px;
+  border-right: 1px dotted #DCDCDC;
+}
+table.sample td{padding:5px;border-right: 0px; border-left: 0px; border-bottom: 1px solid #A9A9A9;}
+td.sample{
+  background-color: #DCDCDC;
+}
+td.sample:nth-of-type(1){ background-color: #DCDCDC;border-right: 1px solid #A9A9A9;}
+td.sample:nth-of-type(2){ background-color: #F5F5F5;border-right: 1px solid #A9A9A9;}
+</style>
 <script>
+$(function() {
+  $('#sample').popover({
+      html: true, // HTMLオプションをtrueにする
+      content: '<table class="sample" border="1"><% (1..5).each{|c| %><tr><td class="sample">00<%=c%></td><td class="sample">名前</td><td>セリフ セリフ セリフ セリフ セリフ </td></tr><% } %></table>'
+        });
+        });
+
 var cnt = 5;
 
 function inputPlus(){
@@ -109,12 +130,17 @@ function getColor(cnt){
       </select> px
 
     </div>
+    <div id="style-change">
+      <h5><input type="checkbox" name="style_change"<% if @style_change %> checked<%end%>>スタイルの変更</h5>
+      <button type="button" class="btn btn-sm btn-primary" id="sample" data-toggle="popover" title="サンプル" data-placement="bottom">サンプル</button>
+    </div>
     <div id="input-text">
       <h4>エクセル文入力</h4>
       <textarea name="text" cols="110" rows="20" style="font-size:10px;"><%= @text %></textarea>
       <br>
       <%= submit_tag("変換", class:"btn btn-success") %><br>
     </div>
-  </div>
 
+
+  </div>
 </div>
