@@ -49,7 +49,7 @@ class ScreateController < ApplicationController
     #テーブルレイアウト
     if @style_change.present?
       table_text += "table{ border: 0px; border-right: 1px dotted #DCDCDC; border-collapse: collapse;\n\tborder-spacing: 0px;\n}"
-      table_text += "table td{ padding:5px; border-right: 0px; border-left: 0px; border-bottom: 1px solid #A9A9A9;}\n"
+      table_text += "td{ border-right: 0px; border-left: 0px; border-bottom: 1px solid #A9A9A9;}\n"
       table_text += "td:nth-of-type(1){ background-color: #DCDCDC;border-right: 1px solid #A9A9A9;}"
       table_text += "td:nth-of-type(2){ background-color: #F5F5F5;border-right: 1px solid #A9A9A9;}\n"
     end
