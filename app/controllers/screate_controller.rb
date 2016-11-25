@@ -30,6 +30,7 @@ class ScreateController < ApplicationController
     men = 0
     women = 0
     humon = 0
+    table_text = ""
 
     #比率
     @sex.each{|s|
@@ -44,11 +45,13 @@ class ScreateController < ApplicationController
     }
 
     #スタイル指定
-    table_text = "\n<style>\n"
+    if @style_change.present? || @padding.to_i != 0
+      table_text = "\n<style>\n"
+    end
 
     #テーブルレイアウト
     if @style_change.present?
-      table_text += "table{ border: 0px; border-right: 1px dotted #DCDCDC; border-collapse: collapse;\n\tborder-spacing: 0px;\n}"
+      table_text += "table{ border: 0px; border-right: 1px dotted #DCDCDC; border-collapse: collapse; border-spacing: 0px;}\n"
       table_text += "td{ border-right: 0px; border-left: 0px; border-bottom: 1px solid #A9A9A9;}\n"
       table_text += "td:nth-of-type(1){ background-color: #DCDCDC;border-right: 1px solid #A9A9A9;}"
       table_text += "td:nth-of-type(2){ background-color: #F5F5F5;border-right: 1px solid #A9A9A9;}\n"
@@ -66,21 +69,23 @@ class ScreateController < ApplicationController
       end
     }
 
-    table_text += "</style>\n"
+    if @style_change.present? || @padding.to_i != 0
+      table_text += "</style>\n\n"
+    end
 
     table_text += "<strong>&#9794;#{men} &#9792;#{women} 不問#{humon} 計#{men+women+humon}</strong><br>\n<br>\n登場人物<small>&lt;総セリフ数：(serif-sum)&gt;</small><br>\n<br>\n"
     @names.each{|n|
       table_text += "<strong class='color-#{color_class(n.first)}'>#{n[1]}</strong>（#{sex_icon(@sex[n.first])}）<small>&lt;セリフ数：(serif-#{n.first})&gt;</small><br>\n<br>\n"
     }
     #配役入力欄作成
-    table_text += "\n<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>"
+    table_text += "<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>"
     @names.each{|n|
       table_text += "#{n[1]}(#{sex_icon(@sex[n.first])})：\n"
     }
     table_text += "</textarea><br>\n<br>\n"
 
     #テーブル作成
-    table_text += "\n<table border='1'>\n"
+    table_text += "<table border='1'>\n"
     br_flag = false
     color_flag = false
 
