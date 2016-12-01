@@ -6,6 +6,7 @@ class ScreateController < ApplicationController
     @colors = params["color"]
     @sex = params["sex"]
     @padding = params["padding"]
+    @datas = params["data"]
     @style_change = params["style_change"]
     @name_cnt = {}
 
@@ -15,6 +16,7 @@ class ScreateController < ApplicationController
           @names.delete(n.first)
           @sex.delete(n.first)
           @colors.delete(n.first)
+          @datas.delete(n.first)
         else
           @name_cnt.store(n.first , 0)
         end
@@ -75,7 +77,12 @@ class ScreateController < ApplicationController
 
     table_text += "<strong>&#9794;#{men} &#9792;#{women} 不問#{humon} 計#{men+women+humon}</strong><br>\n<br>\n登場人物<small>&lt;総セリフ数：(serif-sum)&gt;</small><br>\n<br>\n"
     @names.each{|n|
-      table_text += "<strong class='color-#{color_class(n.first)}'>#{n[1]}</strong>（#{sex_icon(@sex[n.first])}）<small>&lt;セリフ数：(serif-#{n.first})&gt;</small><br>\n<br>\n"
+      table_text += "<strong class='color-#{color_class(n.first)}'>#{n[1]}</strong>（#{sex_icon(@sex[n.first])}）<small>&lt;セリフ数：(serif-#{n.first})&gt;</small><br>\n"
+      if @datas[n.first].present?
+        table_text += @datas[n.first] + "<br>\n<br>\n"
+      else
+        table_text += "<br>\n"
+      end
     }
     #配役入力欄作成
     table_text += "<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>"
