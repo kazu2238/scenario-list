@@ -102,7 +102,7 @@ function getColor(cnt){
         <select class="form-control" name="sex[<%= cnt %>]">
           <option value="men" <% if @sex[n.first] == "men"%>selected<%end%>>男性</option>
           <option value="women" <% if @sex[n.first] == "women"%>selected<%end%>>女性</option>
-          <option value="humon" <% if @sex[n.first] == "不問"%>selected<%end%>>不問</option>
+          <option value="humon" <% if @sex[n.first] == "humon"%>selected<%end%>>不問</option>
         </select>
         <input class="form-control" type="text" id="data-<%=cnt%>" name="data[<%= cnt %>]" style="width:200px;" value="<%=@datas[n.first]%>" placeholder="説明" onKeyPress="return submitStop(event);">
       <br>

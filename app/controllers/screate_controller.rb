@@ -87,7 +87,7 @@ class ScreateController < ApplicationController
     #配役入力欄作成
     table_text += "<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>"
     @names.each{|n|
-      table_text += "#{n[1]}(#{sex_icon(@sex[n.first])})：\n"
+      table_text += "#{n[1]}(#{sex_icon(@sex[n.first],true)})：\n"
     }
     table_text += "</textarea><br>\n<br>\n"
 
@@ -154,7 +154,6 @@ class ScreateController < ApplicationController
       change_text += line.gsub(/\t/, "</td>\n\t\t<td class='color-#{color_class(color)}'>")
     else
       change_text = "\t\t<td>"
-      puts line
       if line =~ /^\t/
       change_text += line.gsub(/\t/, "</td>\n\t\t<td style='font-size:14px;font-style:oblique'>")
       else
@@ -167,14 +166,18 @@ class ScreateController < ApplicationController
   end
 
   #性別の記号を取得
-  def sex_icon(sex)
+  def sex_icon(sex,list = false)
     case sex
     when "men"
       return "&#9794;"
     when "women"
       return "&#9792;"
     when "humon"
-      return "不問"
+      if list == true
+        return "&#9794;・&#9792;"
+      else
+        return "不問"
+      end
     end
   end
 
