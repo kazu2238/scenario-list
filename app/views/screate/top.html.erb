@@ -50,30 +50,17 @@ function getColor(cnt){
     エクセルのテーブルをHTMLのテーブルに変換。<br>
     テーブルには自動的に番号挿入。<br>
   </div>
-  <%= form_tag("/screate", :method => "post")%>
 
   <% if @text.present? %>
+  <%= form_tag("/screate_preview", :method => "post", :target => ["_blank"]) do%>
   <div id="output-html">
-    <h4>変換済HTML<button type="button" class="btn btn-sm btn-primary" id="preview" data-toggle="modal" data-target="#myModal">プレビュー</button></h4>
-    <textarea cols="110" rows="20" style="font-size:10px;"><%= @html_text %></textarea>
-    
-  </div>
-
-  <div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">プレビュー</h4>
-        </div>
-        <div class="modal-body"><%=raw @html_text %></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">閉じる</button>
-        </div>
-      </div>
-    </div>
+    <h4>変換済HTML<button type="submit" class="btn btn-sm btn-primary" id="preview">プレビュー</button></h4>
+    <textarea name="html" cols="110" rows="20" style="font-size:10px;"><%= @html_text %></textarea>
   </div>
   <% end %>
+  <% end %>
+
+  <%= form_tag("/screate", :method => "post") do%>
 
   <div id="edit">
     <h4>オプション</h4>
@@ -91,6 +78,8 @@ function getColor(cnt){
       </div>
     </div>
     <div id="coloring" class="form-inline">
+      <h5>タイトル</h5>
+        <input class="form-control" type="text" id="title" name="title" value="<%if @title%><%=@title%><%end%>">
       <h5>名前と文章に色付け</h5>
     <% cnt = 0 %>
     <% limit = 4 %>
@@ -142,7 +131,7 @@ function getColor(cnt){
       <br>
       <%= submit_tag("変換", class:"btn btn-success") %><br>
     </div>
-
+  <% end %>
 
   </div>
 </div>

@@ -2,6 +2,7 @@ class ScreateController < ApplicationController
 
   def top
     @text = params["text"]
+    @title = params["title"]
     @names = params["name"]
     @colors = params["color"]
     @sex = params["sex"]
@@ -46,9 +47,11 @@ class ScreateController < ApplicationController
       end
     }
 
+    table_text = "<html>\n<title>#{@title}</title>\n"
+
     #スタイル指定
     if @style_change.present? || @padding.to_i != 0
-      table_text = "\n<style>\n"
+      table_text += "\n<style>\n"
     end
 
     #テーブルレイアウト
@@ -75,9 +78,15 @@ class ScreateController < ApplicationController
       table_text += "</style>\n\n"
     end
 
-    table_text += "<strong>&#9794;#{men} &#9792;#{women} 不問#{humon} 計#{men+women+humon}</strong><br>\n<br>\n登場人物<small>&lt;総セリフ数：(serif-sum)&gt;</small><br>\n<br>\n"
+    table_text += "<body>\n"
+
+    if @title
+      table_text += "<br>\n<br>\n<center style='font-size:33px;'>#{@title}</center>\n"+ ("<br>\n" * 5 )
+    end
+
+    table_text += "<strong>&#9794;#{men} &#9792;#{women} 不問#{humon} 計#{men+women+humon}</strong><br>\n<br>\n<br>\n<br>\n登場人物<small>(総セリフ数：(serif-sum))</small><br>\n<br>\n<br>\n"
     @names.each{|n|
-      table_text += "<strong class='color-#{color_class(n.first)}'>#{n[1]}</strong>（#{sex_icon(@sex[n.first])}）<small>&lt;セリフ数：(serif-#{n.first})&gt;</small><br>\n"
+      table_text += "<strong class='color-#{color_class(n.first)}'>#{n[1]}</strong>（#{sex_icon(@sex[n.first])}）<small>(セリフ数：(serif-#{n.first}))</small><br>\n"
       if @datas[n.first].present?
         table_text += @datas[n.first] + "<br>\n<br>\n"
       else
@@ -127,17 +136,22 @@ class ScreateController < ApplicationController
         unless color_flag
           table_text += tab_to_td(line, nil)
         end
-        color_flag = false
         if line =~ /\"/ 
           #セル内がある時
           table_text += "<br>\n"
           br_flag = true
         else
+          if color_flag || line =~ /^\t/
+          table_text += "</span></td>\n\t</tr>\n"
+          else
           table_text += "</td>\n\t</tr>\n"
+          end
         end
+        color_flag = false
       end
     }
-    table_text += "</table>"
+    table_text += "</table><br>\nEND\n"
+    table_text += "</body>\n</html>"
 
     table_text = table_text.gsub(/\(serif-sum\)/, (line_cnt - 1).to_s)
     @names.each{|n|
@@ -150,12 +164,12 @@ class ScreateController < ApplicationController
   def tab_to_td(line, color = nil )
     change_text = ""
     if color && @colors[color]
-      change_text = "\t\t<td class='color-#{color_class(color)}'>"
-      change_text += line.gsub(/\t/, "</td>\n\t\t<td class='color-#{color_class(color)}'>")
+      change_text = "\t\t<td><span class='color-#{color_class(color)}'>"
+      change_text += line.gsub(/\t/, "</span></td>\n\t\t<td><span class='color-#{color_class(color)}'>")
     else
       change_text = "\t\t<td>"
       if line =~ /^\t/
-      change_text += line.gsub(/\t/, "</td>\n\t\t<td style='font-size:14px;font-style:oblique'>")
+      change_text += line.gsub(/\t/, "</td>\n\t\t<td><span style='font-size:14px;font-style:oblique'>")
       else
       change_text += line.gsub(/\t/, "</td>\n\t\t<td>")
       end
@@ -202,6 +216,11 @@ class ScreateController < ApplicationController
     else
       return color
     end
+  end
+
+  def preview()
+    @html = params["html"]
+    render layout: "screate_preview_layout"
   end
 
 end
