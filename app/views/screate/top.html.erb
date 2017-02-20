@@ -80,6 +80,8 @@ function getColor(cnt){
     <div id="coloring" class="form-inline">
       <h5>タイトル</h5>
         <input class="form-control" type="text" id="title" name="title" value="<%if @title%><%=@title%><%end%>">
+      <h5>原作・出典等</h5>
+        <textarea name="other" cols="60" rows="5" style="font-size:10px;"><%= @other %></textarea>
       <h5>名前と文章に色付け</h5>
     <% cnt = 0 %>
     <% limit = 4 %>

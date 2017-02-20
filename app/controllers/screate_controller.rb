@@ -3,6 +3,7 @@ class ScreateController < ApplicationController
   def top
     @text = params["text"]
     @title = params["title"]
+    @other = params["other"]
     @names = params["name"]
     @colors = params["color"]
     @sex = params["sex"]
@@ -47,7 +48,11 @@ class ScreateController < ApplicationController
       end
     }
 
-    table_text = "<html>\n<title>#{@title}</title>\n"
+    table_text = "<html>\n"
+
+    if @title != ""
+      table_text = "<title>#{@title}</title>\n"
+    end
 
     #スタイル指定
     if @style_change.present? || @padding.to_i != 0
@@ -80,8 +85,12 @@ class ScreateController < ApplicationController
 
     table_text += "<body>\n"
 
-    if @title
+    if @title != ""
       table_text += "<br>\n<br>\n<center style='font-size:33px;'>#{@title}</center>\n"+ ("<br>\n" * 5 )
+    end
+
+    if @other != ""
+      table_text += "#{@other.gsub(/(\r\n|\r|\n)/, "<br>\n")}" + ("<br>\n" * 4)
     end
 
     table_text += "<strong>&#9794;#{men} &#9792;#{women} 不問#{humon} 計#{men+women+humon}</strong><br>\n<br>\n<br>\n<br>\n登場人物<small>(総セリフ数：(serif-sum))</small><br>\n<br>\n<br>\n"
