@@ -5,16 +5,31 @@ class ScreateController < ApplicationController
     @title = params["title"]
     @other = params["other"]
     @names = params["name"]
+    @multi_names = params["multi-name"]
     @colors = params["color"]
     @sex = params["sex"]
+    @multi_sex = params["multi-sex"]
     @padding = params["padding"]
     @datas = params["data"]
+    @multi_datas = params["multi-data"]
     @style_change = params["style_change"]
+    @multi_check = {}
+    @multi_check = params["multi"]
     @name_cnt = {}
 
+    if @multi_check.blank?
+      @multi_check = nil
+    end
     if @names.present?
       @names.each{|n|
-        if n[1]== ""
+        if multi_name_check(@multi_names, n)
+          @multi_names[n.first].each{|m|
+            if m[1].present?
+              @name_cnt.store("#{n.first}-#{m.first}" , 0)
+            end
+          }
+        end
+        if n[1].blank?
           @names.delete(n.first)
           @sex.delete(n.first)
           @colors.delete(n.first)
@@ -95,17 +110,62 @@ class ScreateController < ApplicationController
 
     table_text += "<strong>&#9794;#{men} &#9792;#{women} 不問#{humon} 計#{men+women+humon}</strong><br>\n<br>\n<br>\n<br>\n登場人物<small>(総セリフ数：(serif-sum))</small><br>\n<br>\n<br>\n"
     @names.each{|n|
-      table_text += "<strong class='color-#{color_class(n.first)}'>#{n[1]}</strong>（#{sex_icon(@sex[n.first])}）<small>(セリフ数：(serif-#{n.first}))</small><br>\n"
-      if @datas[n.first].present?
-        table_text += @datas[n.first] + "<br>\n<br>\n"
+      table_text += "<strong class='color-#{color_class(n.first)}'>#{n[1]}</strong>（#{sex_icon(@sex[n.first])}）<small>(セリフ数：(serif-#{n.first}))</small>"
+      if @multi_check.present?
+        if @multi_check[n.first].present?
+          if multi_name_check(@multi_names,n)
+            table_text += "<br>\n"
+          else
+            table_text += "（他の役と被り）<br>\n"
+          end
+        else
+          table_text += "<br>\n"
+        end
+        if @datas[n.first].present?
+          table_text += @datas[n.first] + "<br>\n"
+        else
+          table_text += "<br>\n"
+        end
+        if multi_name_check(@multi_names,n)
+          table_text += "<div style='margin-left:10px;'>"
+          @multi_names[n.first].each{|m|
+            if m[1].present?
+              table_text += "<br>\n<span class='color-#{color_class(n.first)}'>#{m[1]}</span>（#{sex_icon(@multi_sex[n.first][m.first])}）<small>(セリフ数：(serif_#{n.first}_#{m.first}))</small>（<span class='color-#{color_class(n.first)}'>#{n[1]}</span>と被り）<br>\n"
+              if @multi_datas[n.first].present?
+                table_text += "#{@multi_datas[n.first][m.first]}<br>\n"
+              end
+            else
+              next
+            end
+          }
+          table_text += "</div>"
+        end
+        table_text += "<br>\n"
       else
         table_text += "<br>\n"
+        if @datas[n.first].present?
+          table_text += @datas[n.first] + "<br>\n<br>\n"
+        else
+          table_text += "<br>\n"
+        end
       end
     }
     #配役入力欄作成
     table_text += "<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>"
     @names.each{|n|
-      table_text += "#{n[1]}(#{sex_icon(@sex[n.first],true)})：\n"
+      table_text += "#{n[1]}(#{sex_icon(@sex[n.first],true)})"
+      if @multi_check.present?
+        if @multi_check[n.first].present?
+          if multi_name_check(@multi_names, n)
+            @multi_names[n.first].each{|m|
+              table_text += "&#{m[1]}(#{sex_icon(@multi_sex[n.first][m.first],true)})"
+            }
+          else
+            table_text += "(被り)"
+          end
+        end
+      end
+      table_text += "：\n"
     }
     table_text += "</textarea><br>\n<br>\n"
 
@@ -135,7 +195,22 @@ class ScreateController < ApplicationController
           line_cnt += 1
         end
         @names.each{|n|
-          if line =~ /^#{n[1]}/ || line =~ /\t#{n[1]}\t/ || line =~ /\t#{n[1]}M\t/ || line =~ /\t#{n[1]}N\t/
+          if @multi_check.present?
+            if multi_name_check(@multi_names, n) && @multi_check[n.first].present?
+              @multi_names[n.first].each{|m|
+                if( line =~ /^#{m[1]}\t/ || line =~ /\t#{m[1]}\t/ || line =~ /\t#{m[1]}M\t/ || line =~ /\t#{m[1]}N\t/) && m[1].present?
+                  color_flag = true
+                  table_text += tab_to_td(line, m.first)
+                  @name_cnt["#{n.first}-#{m.first}"] += 1
+                  break
+                end
+              }
+            end
+          end
+          if color_flag
+            break
+          end
+          if line =~ /^#{n[1]}\t/ || line =~ /\t#{n[1]}\t/ || line =~ /\t#{n[1]}M\t/ || line =~ /\t#{n[1]}N\t/
             color_flag = true
             table_text += tab_to_td(line, n.first)
             @name_cnt[n.first] += 1
@@ -164,6 +239,11 @@ class ScreateController < ApplicationController
 
     table_text = table_text.gsub(/\(serif-sum\)/, (line_cnt - 1).to_s)
     @names.each{|n|
+        if multi_name_check(@multi_names, n)
+          @multi_names[n.first].each{|m|
+            table_text = table_text.gsub(/\(serif_#{n.first}_#{m.first}\)/, @name_cnt["#{n.first}-#{m.first}"].to_s)
+          }
+        end
       table_text = table_text.gsub(/\(serif-#{n.first}\)/, @name_cnt[n.first].to_s)
     }
 
@@ -230,6 +310,17 @@ class ScreateController < ApplicationController
   def preview()
     @html = params["html"]
     render layout: "screate_preview_layout"
+  end
+
+  def multi_name_check(arr,n)
+    if arr
+      if arr[n.first].present?
+        if arr[n.first]["0"].present?
+          return true
+        end
+      end
+    end
+    return false
   end
 
 end

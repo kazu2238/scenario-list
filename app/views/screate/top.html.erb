@@ -22,9 +22,10 @@ $(function() {
         });
 
 var cnt = 5;
+var multi_cnt = []
 
 function inputPlus(){
-  $("#coloring-plus").append('<input class="form-control" type="text" id="name-' + cnt + '" name="name[' + cnt +']" style="width:160px;" placeholder="名前" onKeyPress="return submitStop(event);"> <input class="color-' + cnt + ' color-picker" type="color" list="exlist" name="color[' + cnt +']" onChange="getColor(' + cnt +');" > <select class="form-control" name="sex['+ cnt +']"><option value="men">男性</option><option value="women">女性</option><option value="humon">不問</option></select> <input class="form-control" type="text" id="data-'+cnt+'" style="width:200px;" name="data['+ cnt +']" placeholder="説明" onKeyPress="return submitStop(event);"><br>');
+  $("#coloring-plus").append('<input class="form-control name-'+cnt+'" type="text" name="name[' + cnt +']" style="width:160px;" placeholder="名前" onKeyPress="return submitStop(event);"> <input class="color-' + cnt + ' color-picker" type="color" list="exlist" name="color[' + cnt +']" onChange="getColor(' + cnt +');" > <select class="form-control" name="sex['+ cnt +']"><option value="men">男性</option><option value="women">女性</option><option value="humon">不問</option></select> <input class="form-control" type="text" id="data-'+cnt+'" style="width:200px;" name="data['+ cnt +']" placeholder="説明" onKeyPress="return submitStop(event);"><input type="checkbox" name="multi['+cnt+']" id="multi-'+cnt+'" onclick="multi('+cnt+')"<% if @style_change %> checked<%end%>>被<br>');
   cnt = cnt + 1;
 }
 
@@ -37,7 +38,32 @@ function submitStop(e){
 
 function getColor(cnt){
   var colorCode = $('.color-' + cnt).val();
-  $('#name-'+cnt).css('color',colorCode);
+  $('.name-'+cnt).css('color',colorCode);
+}
+
+function multi(n){
+  if($('#multi-' + n).prop('checked')){
+    $('.multi-plus-' + n).show();
+  }else{
+    $('.multi-plus-' + n).hide();
+  }
+  if($('.multi-plus-'+ n).text() == ''){
+    multi_cnt[n] = 0;
+  $('.multi-plus-' + n).append(' Ｌ<input class="form-control name-'+n+'" type="text" name="multi-name['+n+'][0]" style="width:160px;" placeholder="名前" onKeyPress="return submitStop(event);"><select class="form-control" name="multi-sex['+n+'][0]"><option value="men">男性</option><option value="women">女性</option><option value="humon">不問</option></select> <input class="form-control" type="text" id="multi-data-'+n+'" style="width:200px;" name="multi-data['+n+'][0]" placeholder="説明" onKeyPress="return submitStop(event);"><button type="button" class="btn btn-xs btn-primary multi-btn-'+n+'-0" onClick="multiPlus('+n+');">+</button><br>');
+  }
+  getColor(n);
+}
+
+function multiPlus(n,m = 0){
+  console.log(n + "--" + m);
+  if(!multi_cnt[n]){
+    multi_cnt[n] = m;
+  }
+  $('.multi-btn-'+n+'-'+multi_cnt[n]).hide();
+  multi_cnt[n] += 1;
+  var m_n = multi_cnt[n];
+  $('.multi-plus-' + n).append(' Ｌ<input class="form-control name-'+n+'" type="text" name="multi-name['+n+']['+m_n+']" style="width:160px;" placeholder="名前" onKeyPress="return submitStop(event);"><select class="form-control" name="multi-sex['+n+']['+m_n+']"><option value="men">男性</option><option value="women">女性</option><option value="humon">不問</option></select> <input class="form-control" type="text" id="multi-data-'+n+'-'+m_n+'" style="width:200px;" name="multi-data['+n+']['+m_n+']" placeholder="説明" onKeyPress="return submitStop(event);"><button type="button" class="btn btn-xs btn-primary multi-btn-'+n+'-'+m_n+'" onClick="multiPlus('+n+','+m_n+');">+</button><br>');
+  getColor(n);
 }
 
 </script>
@@ -88,7 +114,7 @@ function getColor(cnt){
     <% if @names.present? %>
       <% @names.each{|n| %>
         <% unless n[1] == "" %>
-        <input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" value="<%=n[1]%>" style="color:<%=@colors[n.first]%>;width:160px;" onKeyPress="return submitStop(event);">
+        <input class="form-control name-<%=cnt%>" type="text" name="name[<%= cnt %>]" value="<%=n[1]%>" style="color:<%=@colors[n.first]%>;width:160px;" onKeyPress="return submitStop(event);">
         <input class="color-<%= cnt %> color-picker" type="color" list="exlist" value="<%=@colors[n.first]%>" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
         <select class="form-control" name="sex[<%= cnt %>]">
           <option value="men" <% if @sex[n.first] == "men"%>selected<%end%>>男性</option>
@@ -96,14 +122,57 @@ function getColor(cnt){
           <option value="humon" <% if @sex[n.first] == "humon"%>selected<%end%>>不問</option>
         </select>
         <input class="form-control" type="text" id="data-<%=cnt%>" name="data[<%= cnt %>]" style="width:200px;" value="<%=@datas[n.first]%>" placeholder="説明" onKeyPress="return submitStop(event);">
-      <br>
-        <% cnt += 1 %>
+          <% if @multi_check.present?%>
+        <input type="checkbox" name="multi[<%=cnt%>]" id="multi-<%=cnt%>" onclick='multi(<%=cnt%>)'<% if @multi_check[cnt.to_s]%> checked<%end%>>被<br>
+        <div class="multi-plus-<%=cnt%>"><%
+            nil_flag = true
+            if @multi_names.present? && @multi_check[cnt.to_s]
+                if @multi_names[cnt.to_s].present?
+                  multi_cnt = 0 
+                  @multi_names[cnt.to_s].each{|m_n|
+                    if multi_cnt != 0 && m_n[1].present?
+            %><br><%
+                    end
+                    if m_n[1].blank?
+                      if @multi_names[cnt.to_s].length - 1 == multi_cnt
+            %>Ｌ<input class="form-control name-<%=cnt%>" type="text" name="multi-name[<%=cnt%>][0]" style="width:160px;" placeholder="名前" onKeyPress="return submitStop(event);">
+            <select class="form-control" name="multi-sex[<%=cnt%>][0]">
+              <option value="men">男性</option>
+              <option value="women">女性</option>
+              <option value="humon">不問</option>
+            </select> 
+            <input class="form-control" type="text" id="multi-data-<%=cnt%>" style="width:200px;" name="multi-data[<%=cnt%>][0]" placeholder="説明" onKeyPress="return submitStop(event);"><%
+          %><button type="button" class="btn btn-xs btn-primary multi-btn-<%=cnt%>-<%=multi_cnt%>" onClick="multiPlus(<%=cnt%>,<%=multi_cnt%>);">+</button><br><%  
+                      end
+                      multi_cnt += 1
+                      next
+                    end
+      %>Ｌ<input class="form-control name-<%=cnt%>" type="text" name="multi-name[<%=cnt%>][<%=multi_cnt%>]" placeholder="名前" value="<%=m_n[1]%>" style="color:<%=@colors[n.first]%>;width:160px;" onKeyPress="return submitStop(event);">
+        <select class="form-control" name="multi-sex[<%=cnt%>][<%=multi_cnt%>]">
+          <option value="men" <% if @multi_sex[cnt.to_s][m_n.first] == "men"%>selected<%end%>>男性</option>
+          <option value="women" <% if @multi_sex[cnt.to_s][m_n.first] == "women"%>selected<%end%>>女性</option>
+          <option value="humon" <% if @multi_sex[cnt.to_s][m_n.first] == "humon"%>selected<%end%>>不問</option>
+          </select> 
+          <input class="form-control" type="text" id="multi-data-<%=cnt%>-<%=multi_cnt%>" style="width:200px;" name="multi-data[<%=cnt%>][<%=multi_cnt%>]" value="<%=@multi_datas[cnt.to_s][m_n.first]%>" placeholder="説明" onKeyPress="return submitStop(event);">
+                    <% if @multi_names[cnt.to_s].length - 1 == multi_cnt %>
+          <button type="button" class="btn btn-xs btn-primary multi-btn-<%=cnt%>-<%=multi_cnt%>" onClick="multiPlus(<%=cnt%>,<%=multi_cnt%>);">+</button><br><%  
+                    end
+                    multi_cnt += 1
+                  }
+                end
+              end
+        %></div>
+          <% else %>
+        <input type="checkbox" name="multi[<%=cnt%>]" id="multi-<%=cnt%>" onclick='multi(<%=cnt%>)'>被<br>
+        <div class="multi-plus-<%=cnt%>"></div>
+          <% end %>
+          <% cnt += 1 %>
         <% end %>
       <% } %>
       <% limit = 1 %>
     <% end %>
       <% (cnt..(cnt+limit)).each{|cnt| %>
-        <input class="form-control" type="text" id="name-<%=cnt%>" name="name[<%= cnt %>]" style="width:160px;" placeholder="名前" onKeyPress="return submitStop(event);">
+        <input class="form-control name-<%=cnt%>" type="text" name="name[<%= cnt %>]" style="width:160px;" placeholder="名前" onKeyPress="return submitStop(event);">
         <input class="color-<%= cnt %> color-picker" type="color" list="exlist" name="color[<%= cnt %>]" onChange="getColor(<%=cnt%>);" >
         <select class="form-control" name="sex[<%= cnt %>]">
           <option value="men">男性</option>
@@ -111,7 +180,9 @@ function getColor(cnt){
           <option value="humon">不問</option>
         </select>
         <input class="form-control" type="text" id="data-<%=cnt%>" style="width:200px;" name="data[<%= cnt %>]" placeholder="説明" onKeyPress="return submitStop(event);">
+        <input type="checkbox" name="multi[<%=cnt%>]" id="multi-<%=cnt%>" onclick='multi(<%=cnt%>)'>被
         <br>
+        <div class="multi-plus-<%=cnt%>"></div>
     <% } %>
       <div id="coloring-plus" class="form-inline">
       </div>
