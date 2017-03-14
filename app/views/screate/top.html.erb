@@ -25,7 +25,7 @@ var cnt = 5;
 var multi_cnt = []
 
 function inputPlus(){
-  $("#coloring-plus").append('<input class="form-control name-'+cnt+'" type="text" name="name[' + cnt +']" style="width:160px;" placeholder="名前" onKeyPress="return submitStop(event);"> <input class="color-' + cnt + ' color-picker" type="color" list="exlist" name="color[' + cnt +']" onChange="getColor(' + cnt +');" > <select class="form-control" name="sex['+ cnt +']"><option value="men">男性</option><option value="women">女性</option><option value="humon">不問</option></select> <input class="form-control" type="text" id="data-'+cnt+'" style="width:200px;" name="data['+ cnt +']" placeholder="説明" onKeyPress="return submitStop(event);"><input type="checkbox" name="multi['+cnt+']" id="multi-'+cnt+'" onclick="multi('+cnt+')"<% if @style_change %> checked<%end%>>被<br>');
+  $("#coloring-plus").append('<input class="form-control name-'+cnt+'" type="text" name="name[' + cnt +']" style="width:160px;" placeholder="名前" onKeyPress="return submitStop(event);"> <input class="color-' + cnt + ' color-picker" type="color" list="exlist" name="color[' + cnt +']" onChange="getColor(' + cnt +');" > <select class="form-control" name="sex['+ cnt +']"><option value="men">男性</option><option value="women">女性</option><option value="humon">不問</option></select> <input class="form-control" type="text" id="data-'+cnt+'" style="width:200px;" name="data['+ cnt +']" placeholder="説明" onKeyPress="return submitStop(event);"> <input type="checkbox" name="multi['+cnt+']" id="multi-'+cnt+'" onclick="multi('+cnt+')"<% if @style_change %> checked<%end%>>被<br><div class="multi-plus-'+cnt+'"></div>');
   cnt = cnt + 1;
 }
 
@@ -55,7 +55,6 @@ function multi(n){
 }
 
 function multiPlus(n,m = 0){
-  console.log(n + "--" + m);
   if(!multi_cnt[n]){
     multi_cnt[n] = m;
   }
