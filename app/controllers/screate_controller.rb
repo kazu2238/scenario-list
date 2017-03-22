@@ -176,6 +176,7 @@ class ScreateController < ApplicationController
 
     line_cnt = 1
     @text.lines{|line|
+      line = line.gsub(/[\"]/, "&quot;")
       line = line.gsub(/\R/, "")
       if br_flag
         table_text += "\t\t" + line.gsub(/\"/, "")
