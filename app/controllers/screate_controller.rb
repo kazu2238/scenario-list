@@ -108,12 +108,13 @@ class ScreateController < ApplicationController
       table_text += "#{@other.gsub(/(\r\n|\r|\n)/, "<br>\n")}" + ("<br>\n" * 4)
     end
 
+    #役一覧
     table_text += "<strong>&#9794;#{men} &#9792;#{women} 不問#{humon} 計#{men+women+humon}</strong><br>\n<br>\n<br>\n<br>\n登場人物<small>(総セリフ数：(serif-sum))</small><br>\n<br>\n<br>\n"
-    @names.each{|n|
-      table_text += "<strong class='color-#{color_class(n.first)}'>#{n[1]}</strong>（#{sex_icon(@sex[n.first])}）<small>(セリフ数：(serif-#{n.first}))</small>"
+    @names.each{|name|
+      table_text += "<strong class='color-#{color_class(name.first)}'>#{name[1]}</strong>（#{sex_icon(@sex[name.first])}）<small>(セリフ数：(serif-#{name.first}))</small>"
       if @multi_check.present?
-        if @multi_check[n.first].present?
-          if multi_name_check(@multi_names,n)
+        if @multi_check[name.first].present?
+          if multi_name_check(@multi_names,name)
             table_text += "<br>\n"
           else
             table_text += "（他の役と被り）<br>\n"
@@ -121,18 +122,18 @@ class ScreateController < ApplicationController
         else
           table_text += "<br>\n"
         end
-        if @datas[n.first].present?
-          table_text += @datas[n.first] + "<br>\n"
+        if @datas[name.first].present?
+          table_text += @datas[name.first] + "<br>\n"
         else
           table_text += "<br>\n"
         end
-        if multi_name_check(@multi_names,n)
+        if multi_name_check(@multi_names,name)
           table_text += "<div style='margin-left:10px;'>"
-          @multi_names[n.first].each{|m|
-            if m[1].present?
-              table_text += "<br>\n<span class='color-#{color_class(n.first)}'>#{m[1]}</span>（#{sex_icon(@multi_sex[n.first][m.first])}）<small>(セリフ数：(serif_#{n.first}_#{m.first}))</small>（<span class='color-#{color_class(n.first)}'>#{n[1]}</span>と被り）<br>\n"
-              if @multi_datas[n.first].present?
-                table_text += "#{@multi_datas[n.first][m.first]}<br>\n"
+          @multi_names[name.first].each{|m_name|
+            if m_name[1].present?
+              table_text += "<br>\n<span class='color-#{color_class(name.first)}'>#{m_name[1]}</span>（#{sex_icon(@multi_sex[name.first][m_name.first])}）<small>(セリフ数：(serif_#{name.first}_#{m_name.first}))</small>（<span class='color-#{color_class(name.first)}'>#{name[1]}</span>と被り）<br>\n"
+              if @multi_datas[name.first].present?
+                table_text += "#{@multi_datas[name.first][m_name.first]}<br>\n"
               end
             else
               next
@@ -143,22 +144,23 @@ class ScreateController < ApplicationController
         table_text += "<br>\n"
       else
         table_text += "<br>\n"
-        if @datas[n.first].present?
-          table_text += @datas[n.first] + "<br>\n<br>\n"
+        if @datas[name.first].present?
+          table_text += @datas[name.first] + "<br>\n<br>\n"
         else
           table_text += "<br>\n"
         end
       end
     }
+
     #配役入力欄作成
     table_text += "<textarea cols='50' rows='#{@names.length + 2}' name='haiyaku'>"
-    @names.each{|n|
-      table_text += "#{n[1]}(#{sex_icon(@sex[n.first],true)})"
+    @names.each{|name|
+      table_text += "#{name[1]}(#{sex_icon(@sex[name.first],true)})"
       if @multi_check.present?
-        if @multi_check[n.first].present?
-          if multi_name_check(@multi_names, n)
-            @multi_names[n.first].each{|m|
-              table_text += "&#{m[1]}(#{sex_icon(@multi_sex[n.first][m.first],true)})"
+        if @multi_check[name.first].present?
+          if multi_name_check(@multi_names, name)
+            @multi_names[name.first].each{|m_name|
+              table_text += "&#{m_name[1]}(#{sex_icon(@multi_sex[name.first][m_name.first],true)})"
             }
           else
             table_text += "(被り)"
@@ -169,14 +171,14 @@ class ScreateController < ApplicationController
     }
     table_text += "</textarea><br>\n<br>\n"
 
-    #テーブル作成
+    #本文テーブル作成
     table_text += "<table border='1'>\n"
     br_flag = false
     color_flag = false
 
     line_cnt = 1
     @text.lines{|line|
-      line = line.gsub(/[\"]/, "&quot;")
+      #line = line.gsub(/!\"\n))(?=\")/, "&quot;")
       line = line.gsub(/\R/, "")
       if br_flag
         table_text += "\t\t" + line.gsub(/\"/, "")
@@ -195,14 +197,14 @@ class ScreateController < ApplicationController
           table_text += "\t<tr>\n\t\t<td>#{sprintf("%03d",line_cnt)}</td>\n"
           line_cnt += 1
         end
-        @names.each{|n|
+        @names.each{|name|
           if @multi_check.present?
-            if multi_name_check(@multi_names, n) && @multi_check[n.first].present?
-              @multi_names[n.first].each{|m|
-                if( line =~ /^#{m[1]}\t/ || line =~ /\t#{m[1]}\t/ || line =~ /\t#{m[1]}M\t/ || line =~ /\t#{m[1]}N\t/) && m[1].present?
+            if multi_name_check(@multi_names, name) && @multi_check[name.first].present?
+              @multi_names[name.first].each{|m_name|
+                if( line =~ /^#{m_name[1]}\t/ || line =~ /\t#{m_name[1]}\t/ || line =~ /\t#{m_name[1]}M\t/ || line =~ /\t#{m_name[1]}N\t/) && m_name[1].present?
                   color_flag = true
-                  table_text += tab_to_td(line, m.first)
-                  @name_cnt["#{n.first}-#{m.first}"] += 1
+                  table_text += tab_to_td(line, name.first)
+                  @name_cnt["#{name.first}-#{m_name.first}"] += 1
                   break
                 end
               }
@@ -211,10 +213,10 @@ class ScreateController < ApplicationController
           if color_flag
             break
           end
-          if line =~ /^#{n[1]}\t/ || line =~ /\t#{n[1]}\t/ || line =~ /\t#{n[1]}M\t/ || line =~ /\t#{n[1]}N\t/
+          if line =~ /^#{name[1]}\t/ || line =~ /\t#{name[1]}\t/ || line =~ /\t#{name[1]}M\t/ || line =~ /\t#{name[1]}N\t/
             color_flag = true
-            table_text += tab_to_td(line, n.first)
-            @name_cnt[n.first] += 1
+            table_text += tab_to_td(line, name.first)
+            @name_cnt[name.first] += 1
             break
           end
         }
@@ -264,7 +266,7 @@ class ScreateController < ApplicationController
       change_text += line.gsub(/\t/, "</td>\n\t\t<td>")
       end
     end
-    change_text = change_text.gsub(/\"/, "")
+    change_text = change_text.gsub(/[\"]/, "")
 
     return change_text
   end
