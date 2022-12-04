@@ -1,0 +1,69 @@
+td.title{
+ width: 160px;
+ }
+
+td.title_la{
+ }
+
+td.writer{
+	width: 80px;
+}
+
+td.men{
+	width: 9px;
+	font-weight: bold;
+	text-align: center;
+}
+
+td.o_a{
+  font-size:11px;
+}
+
+td.number{
+  font-size:11px;
+  width:50px;
+}
+
+td.sum{
+	width: 10px;
+	text-align: center;
+}
+
+td.cover_men{
+	width: 10px;
+	text-align: center;
+}
+td.cover_women{
+	width: 10px;
+	text-align: center;
+}
+td.cover_num{
+	width: 10px;
+	text-align: center;
+}
+
+tr.list-label{
+	background-color: #ffffe0;
+	font-weight: bold;
+}
+tr.back_blue{
+	background-color: #F0F8FF;
+}
+
+td.fake{
+	width: 40px;
+	font-weight: bold;
+	text-align: center;
+}
+td{
+padding:2px;
+}
+
+td.other1{
+  font-size:12px;
+}
+
+td.other_la{
+  width:130px;
+  font-size:11px;
+}
