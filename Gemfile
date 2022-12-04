@@ -11,7 +11,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'therubyracer'
 gem 'hpricot'
-gem 'bootstrap-sass',   '3.2.0'
+#gem 'bootstrap-sass',   '3.2.0'
 gem 'nokogiri'
 
 group :development, :test do
