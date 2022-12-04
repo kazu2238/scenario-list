@@ -4,7 +4,7 @@ ruby "2.7.5"
 
 gem 'rails', '7.0.2.2'
 gem 'sass-rails'
-gem 'uglifier'
+# 'uglifier'
 gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'turbolinks'
