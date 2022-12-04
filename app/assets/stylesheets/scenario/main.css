@@ -31,3 +31,20 @@ span.home{
 	margin-bottom: 50px;
 
 }
+
+
+.inline {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+form {
+	margin-bottom: 0px;
+	padding-left: 10px;
+}
+
+.col-form-label{
+	padding-right: 0px;
+}

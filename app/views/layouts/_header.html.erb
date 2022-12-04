@@ -6,69 +6,98 @@
 </style>
 
 <div id="header">
-  <div class="form-inline">
-    <a href="/" class="btn btn-info btn-sm">HOME</a>
-    <form class="form-horizontal" name="search" action='search' method='get'>
-      <select name='scenario_list' class="form-control">
-        <option value='jericho941' <%
+  <div class="inline">
+    <form class="form-horizontal row col-auto" name="search" action='search' method='get'>
+      <a href="/" class="btn btn-info btn-sm col-auto">HOME</a>
+      <div class="col-auto">
+        <select name='scenario_list' class="form-control">
+          <option value='jericho941' <%
           if @scenario_list == "jericho941"
-          %>selected<%
-        end
-        %>>jericho941</option>
-        <option value='nishitetu' <%
+            %>selected<%
+          end
+          %>>jericho941</option>
+          <option value='nishitetu' <%
           if @scenario_list == "nishitetu"
-          %>selected<%
-        end
-        %>>西鉄台本</option>
-        <option value='lavina' <%
+            %>selected<%
+          end
+          %>>西鉄台本</option>
+          <option value='lavina' <%
           if @scenario_list == "lavina"
-          %>selected<%
-        end
-        %>>ラヴィーナ</option>
-        <option value='news' <%
+            %>selected<%
+          end
+          %>>ラヴィーナ</option>
+          <option value='news' <%
           if @scenario_list == "news"
-          %>selected<%
-        end
-        %>>NEWS</option>
-      </select>
-      <select name='unchecked' class="form-control">
-        <option value='all' <% if @unchecked == "all" %>selected<% end %>>全て</option>
-        <option value='checked' <% if @unchecked == "checked" %>selected<% end %>>チェック済</option>
-        <option value='unchecked' <% if @unchecked == "unchecked" %>selected<% end %>>未チェック</option>
-      </select>
-      <span style="font-size:18px;">男</span><select name='men' class="form-control">
-        <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
-              if @men == cnt
+            %>selected<%
+          end
+          %>>NEWS</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        <select name='unchecked' class="form-control">
+          <option value='all' <% if @unchecked == "all" %>selected<% end %>>全て</option>
+          <option value='checked' <% if @unchecked == "checked" %>selected<% end %>>チェック済</option>
+          <option value='unchecked' <% if @unchecked == "unchecked" %>selected<% end %>>未チェック</option>
+        </select>
+      </div>
+      <div class="col-auto row">
+        <label class="col-auto col-form-label">男</label>
+        <div class="col-auto">
+          <select name='men' class="form-control">
+          <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
+            if @men == cnt
               %>selected<%
-        end
-        %>><%=cnt.to_s%></option>
-      <%end
-        %></select> 
-      <span style="font-size:18px;">女</span><select name='women' class="form-control">
-        <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
-              if @women == cnt
+            end
+            %>><%=cnt.to_s%></option>
+          <%end
+          %></select> 
+        </div>
+      </div>
+      <div class="col-auto row">
+        <label class="col-auto col-form-label">女</label>
+        <div class="col-auto">
+          <select name='women' class="form-control col-auto">
+          <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
+            if @women == cnt
               %>selected<%
-        end
-        %>><%=cnt.to_s%></option>
-      <%end
-        %></select>
-      <span style="font-size:18px;">不問</span><select name='num' class="form-control">
-        <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
-              if @num == cnt
+            end
+            %>><%=cnt.to_s%></option>
+          <%end
+          %></select>
+        </div>
+      </div>
+      <div class="col-auto row">
+        <label class="col-auto col-form-label">不問</label>
+        <div class="col-auto">
+          <select name='num' class="form-control col-auto">
+          <%for cnt in 0..20 do%><option value='<%=cnt.to_s%>' <%
+            if @num == cnt
               %>selected<%
-        end
-        %>><%=cnt.to_s%></option>
-      <%end
-        %></select>
-      <input type='submit' class="btn btn-sm btn-success" value="検索">
-      <input type="checkbox" name="check" value="true" <%
+            end
+            %>><%=cnt.to_s%></option>
+          <%end
+          %></select>
+        </div>
+      </div>
+      <div class="col-auto">
+        <input type='submit' class="btn btn-sm btn-success" value="検索">
+      </div>
+      <div class="col-auto">
+        <input class="form-check-imput" id="checkAther" type="checkbox" name="check" value="true" <%
         if @check == "true"
-        %>checked="checked"<%
-      end
-      %>>融通
-      <input type='hidden' name='process' value='search'>
+          %>checked="checked"<%
+        end
+        %>><label class="form-check-label" for="checkAther">融通</label>
+      </div>
+      <div class="col-auto">
+        <input type='hidden' name='process' value='search'>
+      </div>
+      <div class="col-auto">
+      <input type="text" id="search" class="form-control" title="簡易検索">
+    </div>
     </form>
-    <input type="text" id="search" class="form-control" title="簡易検索">
+    
+    
   </div>
 </div>
 
