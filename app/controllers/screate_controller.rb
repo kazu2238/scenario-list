@@ -4,7 +4,7 @@ class ScreateController < ApplicationController
     @text = params["text"]
     @title = params["title"]
     @other = params["other"]
-    @names = params["name"].permit!.to_hash
+    @names = params["name"]
     @multi_names = params["multi-name"]
     @colors = params["color"]
     @sex = params["sex"]
@@ -50,6 +50,8 @@ class ScreateController < ApplicationController
     women = 0
     humon = 0
     table_text = ""
+    
+    @names = @names.permit!.to_hash
 
     #比率
     @sex.each{|s|
