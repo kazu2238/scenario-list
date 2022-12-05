@@ -4,7 +4,7 @@ class ScreateController < ApplicationController
     @text = params["text"]
     @title = params["title"]
     @other = params["other"]
-    @names = params["name"]
+    @names = params["name"].permit!.to_hash
     @multi_names = params["multi-name"]
     @colors = params["color"]
     @sex = params["sex"]
