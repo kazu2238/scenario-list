@@ -52,6 +52,7 @@ class ScreateController < ApplicationController
     table_text = ""
     
     @names = @names.permit!.to_hash
+    @multi_names = params["multi-name"].permit!.to_hash
 
     #比率
     @sex.each{|s|
@@ -162,7 +163,9 @@ class ScreateController < ApplicationController
         if @multi_check[name.first].present?
           if multi_name_check(@multi_names, name)
             @multi_names[name.first].each{|m_name|
-              table_text += "&#{m_name[1]}(#{sex_icon(@multi_sex[name.first][m_name.first],true)})"
+              if m_name[1].present?
+                table_text += "&#{m_name[1]}(#{sex_icon(@multi_sex[name.first][m_name.first],true)})"
+              end
             }
           else
             table_text += "(被り)"
