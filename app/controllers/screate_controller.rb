@@ -52,7 +52,9 @@ class ScreateController < ApplicationController
     table_text = ""
     
     @names = @names.permit!.to_hash
-    @multi_names = params["multi-name"].permit!.to_hash
+    if @multi_names.present?
+      @multi_names = params["multi-name"].permit!.to_hash
+    end
 
     #比率
     @sex.each{|s|
